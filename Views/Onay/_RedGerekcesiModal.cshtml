@@ -1,0 +1,23 @@
+<div class="modal fade" id="redGerekcesiModal" tabindex="-1" aria-labelledby="redGerekcesiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="redGerekcesiLabel">Red gerekçesi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-controller="Onay" asp-action="BekleyenTalepler">
+                    <input type="hidden" name="talepId" id="redTalepId" value="" />
+                    <div class="mb-3">
+                        <label for="redAciklama" class="form-label">Açıklama</label>
+                        <textarea class="form-control" id="redAciklama" name="gerekce" rows="3" required placeholder="Red nedeni"></textarea>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Vazgeç</button>
+                        <button type="submit" class="btn btn-danger" name="karar" value="red">Reddet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

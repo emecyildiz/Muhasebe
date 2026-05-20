@@ -1,0 +1,152 @@
+@{
+    ViewData["Title"] = "Panel";
+}
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-12">
+            <div class="mb-6">
+                <h1 class="fs-3 mb-1">Panel</h1>
+                <p class="text-secondary mb-0">Özet metrikler ve grafikler — verileri backend ile Model üzerinden bağlayabilirsin.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-lg-3 col-12">
+            <div class="card p-4 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-2">
+                <div class="d-flex gap-3 ">
+                    <div class="icon-shape icon-md bg-primary text-white rounded-2">
+                        <i class="ti ti-report-analytics fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-3 fs-6">Toplam Satış</h2>
+                        <h3 class="fw-bold mb-0">₺25.000</h3>
+                        <p class="text-primary mb-0 small">Örnek veri</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-12">
+            <div class="card p-4 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-2">
+                <div class="d-flex gap-3 ">
+                    <div class="icon-shape icon-md bg-success text-white rounded-2">
+                        <i class="ti ti-repeat fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-3 fs-6">Toplam Alım</h2>
+                        <h3 class="fw-bold mb-0">₺18.000</h3>
+                        <p class="text-success mb-0 small">Örnek veri</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-12">
+            <div class="card p-4 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-2">
+                <div class="d-flex gap-3 ">
+                    <div class="icon-shape icon-md bg-info text-white rounded-2">
+                        <i class="ti ti-currency-dollar fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-3 fs-6">Giderler</h2>
+                        <h3 class="fw-bold mb-0">₺9.000</h3>
+                        <p class="text-info mb-0 small">Örnek veri</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-12">
+            <div class="card p-4 bg-warning bg-opacity-10 border border-warning border-opacity-25 rounded-2">
+                <div class="d-flex gap-3 ">
+                    <div class="icon-shape icon-md bg-warning text-white rounded-2">
+                        <i class="ti ti-notes fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-3 fs-6">Vadesi Gelen</h2>
+                        <h3 class="fw-bold mb-0">₺4.200</h3>
+                        <p class="text-warning mb-0 small">Örnek veri</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center bg-transparent px-4 py-3">
+                    <h3 class="h5 mb-0">Satış vs Alım</h3>
+                    <select class="form-select form-select-sm" style="max-width: 9rem">
+                        <option selected>Bu yıl</option>
+                        <option>Bu ay</option>
+                    </select>
+                </div>
+                <div class="card-body p-4">
+                    <div id="salesPurchaseChart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center bg-transparent px-4 py-3">
+                    <h3 class="h5 mb-0">Genel bakış</h3>
+                    <select class="form-select form-select-sm" style="max-width: 9rem">
+                        <option selected>Son 6 ay</option>
+                        <option>Bu ay</option>
+                    </select>
+                </div>
+                <div class="card-body p-4">
+                    <h3 class="h6">Müşteri dağılımı</h3>
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <div id="customerChart"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-6 border-end text-center">
+                                    <h2 class="mb-1">5.5K</h2>
+                                    <p class="text-success mb-2 small">Yeni</p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <h2 class="mb-1">3.5K</h2>
+                                    <p class="text-warning mb-2 small">Tekrar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-white px-4 py-3">
+                    <h4 class="mb-0 h5">Örnek liste</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex align-items-center gap-3">
+                        <img src="~/images/product-1.png" class="rounded" width="48" height="48" alt="" asp-append-version="true" />
+                        <div class="flex-grow-1">
+                            <p class="mb-1">Kalem A</p>
+                            <small class="text-muted">Örnek · 120 adet</small>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary">%18</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center gap-3">
+                        <img src="~/images/product-2.png" class="rounded" width="48" height="48" alt="" asp-append-version="true" />
+                        <div class="flex-grow-1">
+                            <p class="mb-1">Kalem B</p>
+                            <small class="text-muted">Örnek · 86 adet</small>
+                        </div>
+                        <span class="badge bg-success-subtle text-success border border-success">%12</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <footer class="text-center py-2 text-secondary small">
+                <p class="mb-0">Arayüz şablonu — Muhasebe okul projesi</p>
+            </footer>
+        </div>
+    </div>
+</div>

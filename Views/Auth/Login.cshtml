@@ -1,0 +1,44 @@
+@{
+    Layout = "_LayoutAuth";
+    ViewData["Title"] = "Giriş";
+}
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-4">
+    <div class="card shadow-sm border-0" style="max-width:420px; width:100%;">
+        <div class="card-body p-5">
+            <div class="text-center mb-3">
+                <a asp-controller="Home" asp-action="Dashboard" class="mb-4 d-inline-flex align-items-center justify-content-center text-decoration-none">
+                    <img src="~/images/logo.svg" alt="Muhasebe" height="36" asp-append-version="true" />
+                </a>
+                <h1 class="card-title mb-0 h5">Hesabınıza giriş yapın</h1>
+                <p class="small text-muted mt-2 mb-0">Form gönderimini ve doğrulamayı backend’de sen bağlarsın.</p>
+            </div>
+
+            <form class="needs-validation mt-3" method="post" novalidate asp-controller="Auth" asp-action="Login">
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-posta</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="ornek@kurum.edu.tr" required autofocus autocomplete="username" />
+                    <div class="invalid-feedback">Geçerli bir e-posta girin.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label d-flex justify-content-between">
+                        <span>Şifre</span>
+                        <a href="#" class="small link-primary">Şifremi unuttum</a>
+                    </label>
+                    <input id="password" name="password" type="password" class="form-control" placeholder="Şifre" required minlength="6" autocomplete="current-password" />
+                    <div class="invalid-feedback">En az 6 karakter.</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        <input id="remember" name="remember" class="form-check-input" type="checkbox" value="true" />
+                        <label class="form-check-label small" for="remember">Beni hatırla</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Giriş</button>
+            </form>
+
+            <div class="text-center mt-3 small text-muted">
+                Hesabın yok mu? <a asp-controller="Auth" asp-action="Register" class="link-primary">Kayıt ol</a>
+            </div>
+        </div>
+    </div>
+</div>

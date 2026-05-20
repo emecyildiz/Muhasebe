@@ -1,0 +1,22 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="yeniTalepPanel" aria-labelledby="yeniTalepLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="yeniTalepLabel">Yeni masraf talebi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
+    </div>
+    <div class="offcanvas-body">
+        <p class="small text-secondary">Form alanlarını kendi <code>ViewModel</code>’ine göre düzenle; gönderimi <code>MasrafController</code> içinde işle.</p>
+        <form class="needs-validation" novalidate method="post" asp-controller="Masraf" asp-action="Taleplerim">
+            <div class="mb-3">
+                <label class="form-label" for="tutar">Tutar</label>
+                <input class="form-control" id="tutar" name="tutar" type="number" step="0.01" min="0" required placeholder="0,00" />
+                <div class="invalid-feedback">Tutar gerekli.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="aciklama">Açıklama</label>
+                <textarea class="form-control" id="aciklama" name="aciklama" rows="3" required placeholder="Masraf detayı"></textarea>
+                <div class="invalid-feedback">Açıklama gerekli.</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Talebi gönder</button>
+        </form>
+    </div>
+</div>

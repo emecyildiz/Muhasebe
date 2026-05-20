@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Ana Kasa";
+}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h1 class="fs-3 mb-1">Ana Kasa</h1>
+                <p class="text-secondary mb-0">Kasa hareketleri ve bakiye — tabloyu Entity Framework sonuçlarınla doldurursun.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm"><i class="ti ti-filter"></i> Filtre</button>
+                <button type="button" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i> Yeni kayıt</button>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-4 border-primary border-opacity-25 bg-primary bg-opacity-10 rounded-2">
+                <span class="small text-primary">Kasa bakiyesi (örnek)</span>
+                <h2 class="h4 fw-bold mb-0 mt-1">₺128.400,00</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border-success border-opacity-25 bg-success bg-opacity-10 rounded-2">
+                <span class="small text-success">Bugün giriş</span>
+                <h2 class="h4 fw-bold mb-0 mt-1">₺12.000,00</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border-warning border-opacity-25 bg-warning bg-opacity-10 rounded-2">
+                <span class="small text-warning">Bugün çıkış</span>
+                <h2 class="h4 fw-bold mb-0 mt-1">₺3.250,00</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 text-nowrap table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Açıklama</th>
+                                    <th>Tür</th>
+                                    <th class="text-end">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-5">Henüz kayıt yok — backend’den liste gelecek.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

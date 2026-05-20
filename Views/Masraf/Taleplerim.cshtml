@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Masraf taleplerim";
+}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h1 class="fs-3 mb-1">Masraf taleplerim</h1>
+                <p class="text-secondary mb-0">Kendi taleplerini listele; yeni talep panelini açmak için butonu kullan.</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#yeniTalepPanel">
+                <i class="ti ti-plus"></i> Yeni talep
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Talep no</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                    <th class="text-end">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-5">Liste boş — veriyi controller’dan modele aktar.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_YeniTalepPanel")

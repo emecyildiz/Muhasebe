@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Muhasebe</title>
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="manifest" href="~/site.webmanifest" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon-16x16.png" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon-32x32.png" asp-append-version="true" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/images/apple-touch-icon.png" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" crossorigin />
+    <link rel="stylesheet" href="~/Muhasebe.styles.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand d-inline-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.svg" alt="Muhasebe" height="28" asp-append-version="true" />
+            </a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary btn-sm" asp-controller="Auth" asp-action="Login">Giriş Yap</a>
+                <a class="btn btn-primary btn-sm" asp-controller="Auth" asp-action="Register">Kayıt Ol</a>
+            </div>
+        </div>
+    </nav>
+    <main class="py-5">
+        @RenderBody()
+    </main>
+    <script type="module" src="~/js/main.js" asp-append-version="true" crossorigin></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

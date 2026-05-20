@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Onay bekleyen talepler";
+}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fs-3 mb-1">Onay bekleyen talepler</h1>
+            <p class="text-secondary mb-0">Onay / red için satır aksiyonlarını backend’de uygula.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Talep</th>
+                                    <th>Talep eden</th>
+                                    <th>Tutar</th>
+                                    <th class="text-end">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-5">Onay kuyruğu boş.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_RedGerekcesiModal")

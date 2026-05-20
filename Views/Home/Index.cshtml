@@ -1,0 +1,36 @@
+@{
+    Layout = "_LayoutPublic";
+    ViewData["Title"] = "Hoş geldiniz";
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5 p-lg-6">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-7">
+                            <span class="badge bg-primary-subtle text-primary mb-3">Okul Projesi</span>
+                            <h1 class="display-6 fw-bold mb-3">Muhasebe ve Masraf Yönetim Uygulaması</h1>
+                            <p class="text-secondary mb-4">Bu ekran giriş öncesi ana sayfadır. Kullanıcı önce giriş/kayıt olur, sonra yetkisine göre menüsü filtrelenmiş panel ekranına geçer.</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-primary" asp-controller="Auth" asp-action="Login">Giriş Yap</a>
+                                <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Register">Kayıt Ol</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="border rounded-3 p-4 bg-light">
+                                <h2 class="h6 mb-3">Rol bazlı ekran akışı</h2>
+                                <ul class="small text-secondary mb-0">
+                                    <li>Personel: Panel + Masraf Talepleri</li>
+                                    <li>Müdür/Yönetici: Onay + Departman modülleri</li>
+                                    <li>Finans: Ana Kasa</li>
+                                    <li>Admin: Tüm modüller + Yönetim</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

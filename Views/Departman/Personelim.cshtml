@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Personelim";
+}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h1 class="fs-3 mb-1">Personelim</h1>
+                <p class="text-secondary mb-0">Departman personel listesi.</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#personelEkleModal">
+                <i class="ti ti-user-plus"></i> Personel ekle
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ad soyad</th>
+                                    <th>E-posta</th>
+                                    <th>Rol</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" class="text-center text-secondary py-5">Personel listesi backend’den gelecek.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_PersonelEkleModal")

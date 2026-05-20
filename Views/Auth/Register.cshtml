@@ -1,0 +1,51 @@
+@{
+    Layout = "_LayoutAuth";
+    ViewData["Title"] = "Kayıt";
+}
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-4">
+    <div class="card shadow-sm border-0" style="max-width:420px; width:100%;">
+        <div class="card-body p-5">
+            <div class="text-center mb-3">
+                <a asp-controller="Home" asp-action="Dashboard" class="mb-4 d-inline-flex align-items-center justify-content-center text-decoration-none">
+                    <img src="~/images/logo.svg" alt="Muhasebe" height="36" asp-append-version="true" />
+                </a>
+                <h1 class="card-title mb-0 h5">Yeni hesap oluştur</h1>
+                <p class="small text-muted mt-2 mb-0">Kayıt işlemini controller / servis katmanında sen tamamlarsın.</p>
+            </div>
+
+            <form class="needs-validation mt-3" method="post" novalidate asp-controller="Auth" asp-action="Register">
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Ad soyad</label>
+                    <input id="fullName" name="fullName" type="text" class="form-control" placeholder="Ad Soyad" required />
+                    <div class="invalid-feedback">Ad soyad gerekli.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-posta</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="ornek@kurum.edu.tr" required autocomplete="email" />
+                    <div class="invalid-feedback">Geçerli bir e-posta girin.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Şifre</label>
+                    <input id="password" name="password" type="password" class="form-control" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password" />
+                    <div class="invalid-feedback">En az 6 karakter.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Şifre tekrar</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Tekrar" required autocomplete="new-password"
+                           oninput="this.setCustomValidity(document.getElementById('password').value !== this.value ? 'Şifreler eşleşmiyor.' : '')" />
+                    <div class="invalid-feedback">Şifreler eşleşmeli.</div>
+                </div>
+                <div class="mb-3 form-check">
+                    <input id="terms" class="form-check-input" type="checkbox" required />
+                    <label class="form-check-label small" for="terms"><a href="#" class="text-decoration-none">Koşulları</a> okudum</label>
+                    <div class="invalid-feedback">Devam için onaylayın.</div>
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Kayıt ol</button>
+            </form>
+
+            <div class="text-center mt-3 small text-muted">
+                Zaten hesabın var mı? <a asp-controller="Auth" asp-action="Login" class="link-primary">Giriş</a>
+            </div>
+        </div>
+    </div>
+</div>
