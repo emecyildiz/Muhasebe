@@ -1,6 +1,7 @@
-﻿namespace Muhasebe.Services
+﻿using Muhasebe.Services.Interfaces;
+namespace Muhasebe.Services
 {
-    public class FinansService
+    public class FinansService : IFinansService
     {
     }
 }

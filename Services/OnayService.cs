@@ -1,6 +1,7 @@
-﻿namespace Muhasebe.Services
+﻿using Muhasebe.Services.Interfaces;
+namespace Muhasebe.Services
 {
-    public class OnayService
+    public class OnayService : IOnayService
     {
     }
 }

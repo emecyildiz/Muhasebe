@@ -1,6 +1,8 @@
-﻿namespace Muhasebe.Services
+﻿using Muhasebe.Services.Interfaces;
+namespace Muhasebe.Services
+
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
     }
 }
