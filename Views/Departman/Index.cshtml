@@ -1,0 +1,65 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<Muhasebe.Models.Entities.Departman>
+
+@{
+        ViewData["Title"] = "Departmanlar";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="fs-3 mb-1">Departman Yönetimi</h1>
+        <p class="mb-0">Sistemdeki tüm departmanları buradan yönetebilirsiniz.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="ti ti-plus"></i> Yeni Departman Ekle
+        </a>
+    </div>
+</div>
+
+<div class="card table-responsive">
+    <table class="table mb-0 text-nowrap table-hover">
+        <thead class="table-light border-light">
+            <tr>
+                <th>ID</th>
+                <th>Departman Adı</th>
+                <th>Müdür ID</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Eğer veritabanında veri varsa döngüye gir *@
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr class="align-middle">
+                        <td>@item.DepartmanId</td>
+                        <td><span class="fw-semibold">@item.DepartmanAdi</span></td>
+                        <td>@(item.MudurId?.ToString() ?? "Atanmadı")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.DepartmanId" class="text-primary" title="Düzenle">
+                                <i class="ti ti-edit fs-5"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.DepartmanId" class="text-danger ms-3" title="Sil">
+                                <i class="ti ti-trash fs-5"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                @* Veritabanı boşsa gösterilecek uyarı *@
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-muted">
+                        Henüz sisteme kayıtlı bir departman bulunmuyor.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Muhasebe.Models.Entities.Departman
+
+@{
+    ViewData["Title"] = "Departman Sil";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger-subtle text-danger fw-bold">
+                <i class="ti ti-alert-triangle fs-5 me-2"></i> Silme Onayı
+            </div>
+            <div class="card-body text-center p-5">
+                <h4 class="mb-3">Bu departmanı silmek istediğinize emin misiniz?</h4>
+                <p class="text-muted mb-4">
+                    <strong>@Model.DepartmanAdi</strong> departmanı veritabanından kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+                </p>
+
+                <form asp-action="Delete" method="post">
+                    @* Silinecek verinin ID'sini gizlice tutuyoruz *@
+                    <input type="hidden" asp-for="DepartmanId" />
+
+                    <button type="submit" class="btn btn-danger px-4">Evet, Kalıcı Olarak Sil</button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Vazgeç</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

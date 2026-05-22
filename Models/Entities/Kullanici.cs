@@ -31,7 +31,7 @@ public partial class Kullanici
 
     public virtual ICollection<FinansalIslem> FinansalIslems { get; set; } = new List<FinansalIslem>();
 
-    public virtual Maas? Maa { get; set; }
+    public virtual Maas? Maas { get; set; }
 
     public virtual ICollection<MasrafTalebi> MasrafTalebis { get; set; } = new List<MasrafTalebi>();
 

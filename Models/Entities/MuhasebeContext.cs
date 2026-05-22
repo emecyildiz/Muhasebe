@@ -196,7 +196,7 @@ public partial class MuhasebeContext : DbContext
             entity.Property(e => e.AylikTutar).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.KullaniciId).HasColumnName("KullaniciID");
 
-            entity.HasOne(d => d.Kullanici).WithOne(p => p.Maa)
+            entity.HasOne(d => d.Kullanici).WithOne(p => p.Maas)
                 .HasForeignKey<Maas>(d => d.KullaniciId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Maas_Kullanici");

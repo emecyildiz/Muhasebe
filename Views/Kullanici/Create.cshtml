@@ -1,0 +1,76 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Muhasebe.Models.Entities.Kullanici
+
+@{
+    ViewData["Title"] = "Yeni Personel Ekle";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1 class="fs-3 mb-0">Yeni Personel Kaydı</h1>
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Ad" class="form-label">Ad</label>
+                            <input asp-for="Ad" class="form-control" required>
+                            <span asp-validation-for="Ad" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Soyad" class="form-label">Soyad</label>
+                            <input asp-for="Soyad" class="form-control" required>
+                            <span asp-validation-for="Soyad" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Eposta" class="form-label">E-posta Adresi</label>
+                            <input asp-for="Eposta" type="email" class="form-control" required>
+                            <span asp-validation-for="Eposta" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="SifreHash" class="form-label">Geçici Şifre</label>
+                            <input asp-for="SifreHash" type="password" class="form-control" required>
+                            <span asp-validation-for="SifreHash" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DepartmanId" class="form-label">Bağlı Olduğu Departman</label>
+                            <select asp-for="DepartmanId" class="form-select" asp-items="ViewBag.DepartmanListesi" required>
+                                <option value="">-- Departman Seçiniz --</option>
+                            </select>
+                            <span asp-validation-for="DepartmanId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="RolId" class="form-label">Sistem Rolü</label>
+                            <select asp-for="RolId" class="form-select" asp-items="ViewBag.RolListesi" required>
+                                <option value="">-- Rol Seçiniz --</option>
+                            </select>
+                            <span asp-validation-for="RolId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Personeli Kaydet</button>
+                        <button type="reset" class="btn btn-light">Formu Temizle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

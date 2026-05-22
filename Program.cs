@@ -1,10 +1,11 @@
+using Muhasebe.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Muhasebe.Data;
 using Muhasebe.Services;
 using Muhasebe.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<MuhasebeContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("connect")));
 
 
@@ -16,6 +17,7 @@ builder.Services.AddScoped<IFinansService, FinansService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMasrafService, MasrafService>();
 builder.Services.AddScoped<IOnayService, OnayService>();
+builder.Services.AddScoped<IKullaniciService, KullaniciService>();
 
 
 var app = builder.Build();
