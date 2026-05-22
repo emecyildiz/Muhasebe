@@ -19,6 +19,7 @@ builder.Services.AddScoped<IMasrafService, MasrafService>();
 builder.Services.AddScoped<IOnayService, OnayService>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();
 builder.Services.AddScoped<IDepartmanButceService, DepartmanButceService>();
+builder.Services.AddScoped<IMasrafTalebiService, MasrafTalebiService>();
 
 
 var app = builder.Build();

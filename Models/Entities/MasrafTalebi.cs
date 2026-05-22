@@ -17,9 +17,9 @@ public partial class MasrafTalebi
 
     public string? Aciklama { get; set; }
 
-    public DateTime? TalepTarihi { get; set; }
+    public DateTime TalepTarihi { get; set; }
 
-    public string? Durum { get; set; }
+    public int Durum { get; set; }
 
     public virtual ICollection<Bildirim> Bildirims { get; set; } = new List<Bildirim>();
 

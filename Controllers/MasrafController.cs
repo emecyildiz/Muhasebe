@@ -4,8 +4,8 @@ namespace Muhasebe.Controllers
 {
     public class MasrafController : Controller
     {
-        public IActionResult Index() => RedirectToAction(nameof(Taleplerim));
+        public IActionResult Index() => RedirectToAction("Index", "MasrafTalebi");
 
-        public IActionResult Taleplerim() => View();
+        public IActionResult Taleplerim() => RedirectToAction("Index", "MasrafTalebi");
     }
 }

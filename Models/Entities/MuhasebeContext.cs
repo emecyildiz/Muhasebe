@@ -212,8 +212,7 @@ public partial class MuhasebeContext : DbContext
             entity.Property(e => e.Aciklama).HasMaxLength(500);
             entity.Property(e => e.DepartmanId).HasColumnName("DepartmanID");
             entity.Property(e => e.Durum)
-                .HasMaxLength(20)
-                .HasDefaultValue("Bekliyor");
+                .HasDefaultValue(1);
             entity.Property(e => e.KategoriId).HasColumnName("KategoriID");
             entity.Property(e => e.TalepEdenKullaniciId).HasColumnName("TalepEdenKullaniciID");
             entity.Property(e => e.TalepTarihi)

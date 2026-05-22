@@ -1,0 +1,74 @@
+@model Muhasebe.Models.Entities.MasrafTalebi
+@{
+    ViewData["Title"] = $"Talep #{Model.TalepId}";
+    ViewData["PageTitle"] = $"Masraf Talebi #{Model.TalepId}";
+    ViewData["PageSubtitle"] = Model.Aciklama ?? "Talep detayı";
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Talep Eden</span>
+                <p class="fw-semibold mb-0">@Model.TalepEdenKullanici?.Ad @Model.TalepEdenKullanici?.Soyad</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Departman</span>
+                <p class="fw-semibold mb-0">@(Model.Departman?.DepartmanAdi ?? "—")</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Kategori</span>
+                <p class="fw-semibold mb-0">@(Model.Kategori?.KategoriAdi ?? "—")</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Durum</span>
+                <p class="mb-0 mt-1">@await Html.PartialAsync("_DurumBadge", Model.Durum)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white px-4 py-3">
+                    <h2 class="h6 mb-0">Talep Bilgileri</h2>
+                </div>
+                <div class="card-body p-4">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-secondary">Talep Tarihi</dt>
+                        <dd class="col-sm-8">@Model.TalepTarihi.ToString("dd.MM.yyyy")</dd>
+                        <dt class="col-sm-4 text-secondary">Tutar</dt>
+                        <dd class="col-sm-8 fw-semibold text-primary">@Model.Tutar.ToString("N2") ₺</dd>
+                        <dt class="col-sm-4 text-secondary">Açıklama</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Aciklama) ? "—" : Model.Aciklama)</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white px-4 py-3">
+                    <h2 class="h6 mb-0">Durum Güncelle</h2>
+                </div>
+                <div class="card-body p-4">
+                    <p class="small text-secondary">Onaylayan kullanıcı auth ile bağlanınca otomatik atanacak.</p>
+                    <form asp-action="UpdateDurum" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" name="talepId" value="@Model.TalepId" />
+                        <div class="mb-3">
+                            <label class="form-label" for="durumId">Yeni durum</label>
+                            <select name="durumId" id="durumId" class="form-select" asp-items="ViewBag.DurumListesi" required></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Durumu Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

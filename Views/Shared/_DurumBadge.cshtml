@@ -1,0 +1,14 @@
+@using Muhasebe.Common.Enums
+@model int
+@{
+    var durum = (DurumEnum)Model;
+    var (css, text) = durum switch
+    {
+        DurumEnum.Bekliyor => ("bg-warning-subtle text-warning border-warning", "Bekliyor"),
+        DurumEnum.Onaylandi => ("bg-success-subtle text-success border-success", "Onaylandı"),
+        DurumEnum.Reddedildi => ("bg-danger-subtle text-danger border-danger", "Reddedildi"),
+        DurumEnum.IptalEdildi => ("bg-secondary-subtle text-secondary border-secondary", "İptal"),
+        _ => ("bg-light text-secondary border", Model.ToString())
+    };
+}
+<span class="badge @css border">@text</span>

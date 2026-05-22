@@ -92,7 +92,7 @@
         <a class="@NavClass("Home","Dashboard")" asp-controller="Home" asp-action="Dashboard"><i class="ti ti-home"></i><span class="nav-text">Panel</span></a>
       </li>
       <li>
-        <a class="@NavClass("Masraf","Taleplerim")" asp-controller="Masraf" asp-action="Taleplerim"><i class="ti ti-wallet"></i><span class="nav-text">Masraf Talepleri</span></a>
+        <a class="@NavCtrlClass("MasrafTalebi")" asp-controller="MasrafTalebi" asp-action="Index"><i class="ti ti-wallet"></i><span class="nav-text">Masraf Talepleri</span></a>
       </li>
       @if (canSeeFinance)
       {
