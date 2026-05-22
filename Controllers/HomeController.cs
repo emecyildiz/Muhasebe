@@ -33,5 +33,19 @@ namespace Muhasebe.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult NotFound(int statusCode)
+        {
+            Response.StatusCode = StatusCodes.Status404NotFound;
+            return View("RecordNotFound", new NotFoundViewModel
+            {
+                EntityName = "Sayfa veya kayıt",
+                Message = "Aradığınız adres geçersiz olabilir ya da ilgili kayıt artık mevcut olmayabilir.",
+                ListController = "Home",
+                ListAction = "Dashboard",
+                ListLabel = "Panele dön"
+            });
+        }
     }
 }

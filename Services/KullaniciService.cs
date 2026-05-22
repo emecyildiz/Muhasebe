@@ -34,8 +34,19 @@ namespace Muhasebe.Services
 
         public async Task UpdateKullaniciAsync(Kullanici kullanici)
         {
-            _context.Kullanicis.Update(kullanici);
-            await _context.SaveChangesAsync();
+            var existingKullanici = await _context.Kullanicis.FindAsync(kullanici.KullaniciId);
+            if (existingKullanici != null)
+            {
+                existingKullanici.Ad = kullanici.Ad;
+                existingKullanici.Soyad = kullanici.Soyad;
+                existingKullanici.Eposta = kullanici.Eposta;
+                existingKullanici.SifreHash = kullanici.SifreHash;
+                existingKullanici.RolId = kullanici.RolId;
+                existingKullanici.DepartmanId = kullanici.DepartmanId;
+                existingKullanici.IseGirisTarihi = kullanici.IseGirisTarihi;
+                existingKullanici.Durum = kullanici.Durum;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteKullaniciAsync(int id)
@@ -48,5 +59,13 @@ namespace Muhasebe.Services
             }
         }
 
+        public async Task<Kullanici> GetKullaniciDetailAsync(int id)
+        {
+            return await _context.Kullanicis
+                .Include(k => k.Rol)
+                .Include(k => k.Departman)
+                .Include(k => k.Maas)
+                .FirstOrDefaultAsync(k => k.KullaniciId == id);
+        }
     }
 }

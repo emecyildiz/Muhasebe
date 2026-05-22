@@ -18,6 +18,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMasrafService, MasrafService>();
 builder.Services.AddScoped<IOnayService, OnayService>();
 builder.Services.AddScoped<IKullaniciService, KullaniciService>();
+builder.Services.AddScoped<IDepartmanButceService, DepartmanButceService>();
 
 
 var app = builder.Build();
@@ -34,6 +35,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?statusCode={0}");
 
 app.UseAuthorization();
 

@@ -1,0 +1,75 @@
+@model IEnumerable<Muhasebe.Models.Entities.DepartmanButce>
+@{
+    var departmanAdi = ViewBag.DepartmanAdi as string ?? "Departman";
+    ViewData["Title"] = "Bütçe Geçmişi";
+    ViewData["PageTitle"] = $"{departmanAdi} — Bütçe Geçmişi";
+    ViewData["PageSubtitle"] = "Departmana ait tüm dönemsel bütçe kayıtları.";
+    ViewData["BackController"] = "DepartmanButce";
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    @{
+        var toplamAyrilan = Model?.Sum(x => x.AyrilanButce) ?? 0;
+        var toplamKullanilan = Model?.Sum(x => x.KullanilanButce ?? 0) ?? 0;
+        var toplamKalan = toplamAyrilan - toplamKullanilan;
+    }
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 bg-primary bg-opacity-10">
+                <span class="small text-primary">Toplam Ayrılan</span>
+                <h3 class="h5 fw-bold mb-0 mt-1">@toplamAyrilan.ToString("N2") ₺</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 bg-warning bg-opacity-10">
+                <span class="small text-warning">Toplam Kullanılan</span>
+                <h3 class="h5 fw-bold mb-0 mt-1">@toplamKullanilan.ToString("N2") ₺</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 bg-success bg-opacity-10">
+                <span class="small text-success">Toplam Kalan</span>
+                <h3 class="h5 fw-bold mb-0 mt-1">@toplamKalan.ToString("N2") ₺</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm table-responsive">
+        <table class="table mb-0 table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Dönem</th>
+                    <th class="text-end">Ayrılan</th>
+                    <th class="text-end">Kullanılan</th>
+                    <th class="text-end">Kalan</th>
+                    <th class="text-end">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model.OrderByDescending(x => x.Yil).ThenByDescending(x => x.Ay))
+                    {
+                        var kalan = item.AyrilanButce - (item.KullanilanButce ?? 0);
+                        <tr>
+                            <td>@item.Yil @(item.Ay.HasValue ? $"/ {item.Ay:00}" : "(Yıllık)")</td>
+                            <td class="text-end">@item.AyrilanButce.ToString("N2") ₺</td>
+                            <td class="text-end">@((item.KullanilanButce ?? 0).ToString("N2")) ₺</td>
+                            <td class="text-end fw-semibold">@kalan.ToString("N2") ₺</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.ButceId" class="btn btn-sm btn-light"><i class="ti ti-edit text-primary"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-secondary">Bu departman için bütçe kaydı bulunamadı.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

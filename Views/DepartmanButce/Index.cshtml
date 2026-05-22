@@ -1,0 +1,58 @@
+@model IEnumerable<Muhasebe.Models.Entities.DepartmanButce>
+@{
+    ViewData["Title"] = "Departman Bütçeleri";
+    ViewData["PageTitle"] = "Departman Bütçe Yönetimi";
+    ViewData["PageSubtitle"] = "Departmanlara ayrılan ve kullanılan bütçeleri yönetin.";
+    ViewData["ShowBack"] = false;
+    ViewData["ActionUrl"] = Url.Action("Create");
+    ViewData["ActionText"] = "Yeni Bütçe";
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="card table-responsive border-0 shadow-sm">
+        <table class="table mb-0 text-nowrap table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Departman</th>
+                    <th>Dönem</th>
+                    <th class="text-end">Ayrılan</th>
+                    <th class="text-end">Kullanılan</th>
+                    <th class="text-end">Kalan</th>
+                    <th class="text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        var kalan = item.AyrilanButce - (item.KullanilanButce ?? 0);
+                        <tr>
+                            <td>@item.ButceId</td>
+                            <td><span class="fw-semibold">@(item.Departman?.DepartmanAdi ?? $"ID {item.DepartmanId}")</span></td>
+                            <td>@item.Yil @(item.Ay.HasValue ? $"/ {item.Ay:00}" : "")</td>
+                            <td class="text-end">@item.AyrilanButce.ToString("N2") ₺</td>
+                            <td class="text-end">@((item.KullanilanButce ?? 0).ToString("N2")) ₺</td>
+                            <td class="text-end">
+                                <span class="@(kalan < 0 ? "text-danger" : "text-success") fw-semibold">@kalan.ToString("N2") ₺</span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Detail" asp-route-id="@item.DepartmanId" class="btn btn-sm btn-light" title="Departman bütçe geçmişi"><i class="ti ti-history"></i></a>
+                                <a asp-action="Edit" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Düzenle"><i class="ti ti-edit text-primary"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Sil"><i class="ti ti-trash text-danger"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-secondary">Henüz bütçe kaydı yok.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

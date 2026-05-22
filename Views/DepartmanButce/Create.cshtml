@@ -1,0 +1,65 @@
+@model Muhasebe.Models.Entities.DepartmanButce
+@{
+    ViewData["Title"] = "Yeni Bütçe";
+    ViewData["PageTitle"] = "Yeni Departman Bütçesi";
+    ViewData["PageSubtitle"] = "Departman için dönemsel bütçe tanımlayın.";
+    var departmanSelect = ViewBag.DepartmanId as SelectList ?? ViewBag.DepartmanList as SelectList;
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="DepartmanId" class="form-label">Departman</label>
+                                <select asp-for="DepartmanId" class="form-select" asp-items="departmanSelect">
+                                    <option value="">— Seçiniz —</option>
+                                </select>
+                                <span asp-validation-for="DepartmanId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Yil" class="form-label"></label>
+                                <input asp-for="Yil" type="number" class="form-control" min="2000" max="2100" value="@(Model?.Yil > 0 ? Model.Yil : DateTime.Now.Year)" />
+                                <span asp-validation-for="Yil" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Ay" class="form-label">Ay (opsiyonel)</label>
+                                <input asp-for="Ay" type="number" class="form-control" min="1" max="12" placeholder="1-12" />
+                                <span asp-validation-for="Ay" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="AyrilanButce" class="form-label">Ayrılan Bütçe</label>
+                                <div class="input-group">
+                                    <input asp-for="AyrilanButce" type="number" step="0.01" class="form-control" />
+                                    <span class="input-group-text">₺</span>
+                                </div>
+                                <span asp-validation-for="AyrilanButce" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="KullanilanButce" class="form-label">Kullanılan Bütçe</label>
+                                <div class="input-group">
+                                    <input asp-for="KullanilanButce" type="number" step="0.01" class="form-control" value="0" />
+                                    <span class="input-group-text">₺</span>
+                                </div>
+                                <span asp-validation-for="KullanilanButce" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                            <a asp-action="Index" class="btn btn-light">İptal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

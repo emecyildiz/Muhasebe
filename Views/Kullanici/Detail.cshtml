@@ -1,0 +1,56 @@
+@model Muhasebe.Models.Entities.Kullanici
+@{
+    ViewData["Title"] = "Kullanıcı Detayı";
+    ViewData["PageTitle"] = $"{Model.Ad} {Model.Soyad}";
+    ViewData["PageSubtitle"] = "Kullanıcı profil bilgileri.";
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row g-3">
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">E-posta</span>
+                <p class="fw-semibold mb-0">@Model.Eposta</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Departman</span>
+                <p class="fw-semibold mb-0">@(Model.Departman?.DepartmanAdi ?? $"ID: {Model.DepartmanId}")</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Rol</span>
+                <p class="fw-semibold mb-0">@(Model.Rol?.RolAdi ?? $"ID: {Model.RolId}")</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">İşe Giriş</span>
+                <p class="fw-semibold mb-0">@(Model.IseGirisTarihi?.ToString("dd.MM.yyyy") ?? "—")</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <span class="text-secondary small">Durum</span>
+                <p class="mb-0">
+                    @if (Model.Durum == true)
+                    {
+                        <span class="badge bg-success-subtle text-success">Aktif</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger-subtle text-danger">Pasif</span>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.KullaniciId" class="btn btn-primary btn-sm"><i class="ti ti-edit"></i> Düzenle</a>
+        <a asp-action="Delete" asp-route-id="@Model.KullaniciId" class="btn btn-outline-danger btn-sm"><i class="ti ti-trash"></i> Sil</a>
+    </div>
+</div>

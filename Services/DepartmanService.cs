@@ -43,5 +43,14 @@ namespace Muhasebe.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<Departman> GetDepartmanDetailAsync(int id)
+        {
+            return await _context.Departmen
+                .Include(d => d.Kullanicis)
+                .Include(d => d.Mudur)
+                .FirstOrDefaultAsync(d => d.DepartmanId == id);
+        }
+
     }
 }

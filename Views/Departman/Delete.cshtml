@@ -1,33 +1,26 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model Muhasebe.Models.Entities.Departman
-
+﻿@model Muhasebe.Models.Entities.Departman
 @{
     ViewData["Title"] = "Departman Sil";
+    ViewData["PageTitle"] = "Departman Sil";
+    ViewData["PageSubtitle"] = "Bu işlem geri alınamaz.";
 }
+@await Html.PartialAsync("_PageHeader")
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <div class="card border-danger">
-            <div class="card-header bg-danger-subtle text-danger fw-bold">
-                <i class="ti ti-alert-triangle fs-5 me-2"></i> Silme Onayı
-            </div>
-            <div class="card-body text-center p-5">
-                <h4 class="mb-3">Bu departmanı silmek istediğinize emin misiniz?</h4>
-                <p class="text-muted mb-4">
-                    <strong>@Model.DepartmanAdi</strong> departmanı veritabanından kalıcı olarak silinecektir. Bu işlem geri alınamaz.
-                </p>
-
-                <form asp-action="Delete" method="post">
-                    @* Silinecek verinin ID'sini gizlice tutuyoruz *@
-                    <input type="hidden" asp-for="DepartmanId" />
-
-                    <button type="submit" class="btn btn-danger px-4">Evet, Kalıcı Olarak Sil</button>
-                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Vazgeç</a>
-                </form>
+<div class="container-fluid pb-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            <div class="card border-danger border-opacity-25 shadow-sm">
+                <div class="card-header bg-danger-subtle text-danger fw-semibold">
+                    <i class="ti ti-alert-triangle me-2"></i> Silme Onayı
+                </div>
+                <div class="card-body p-4 text-center">
+                    <p class="mb-4"><strong>@Model.DepartmanAdi</strong> departmanı kalıcı olarak silinecek.</p>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="DepartmanId" />
+                        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                        <a asp-action="Index" class="btn btn-light ms-2">Vazgeç</a>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

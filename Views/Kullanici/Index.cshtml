@@ -1,88 +1,64 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Muhasebe.Models.Entities.Kullanici>
 @{
+    ViewData["Title"] = "Kullanıcılar";
+    ViewData["PageTitle"] = "Kullanıcı Yönetimi";
+    ViewData["PageSubtitle"] = "Sistemdeki tüm kullanıcıları buradan yönetebilirsiniz.";
+    ViewData["ShowBack"] = false;
+    ViewData["ActionUrl"] = Url.Action("Create");
+    ViewData["ActionText"] = "Yeni Kullanıcı";
 }
-@model IEnumerable<Muhasebe.Models.Entities.Kullanici>
+@await Html.PartialAsync("_PageHeader")
 
-@{
-    ViewData["Title"] = "Personel Listesi";
-}
-
-<div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-        <div>
-            <h1 class="fs-3 mb-1">Personel Yönetimi</h1>
-            <p class="mb-0">Sistemdeki tüm personelleri buradan yönetebilirsiniz.</p>
-        </div>
-        <div>
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="ti ti-plus"></i> Yeni Personel Ekle
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="card table-responsive">
-    <table class="table mb-0 text-nowrap table-hover">
-        <thead class="table-light border-light">
-            <tr>
-                <th>ID</th>
-                <th>Ad Soyad</th>
-                <th>E-posta</th>
-                <th>Departman</th>
-                <th>Rol</th>
-                <th>Durum</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var item in Model)
+<div class="container-fluid pb-4">
+    <div class="card table-responsive border-0 shadow-sm">
+        <table class="table mb-0 text-nowrap table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Ad Soyad</th>
+                    <th>E-posta</th>
+                    <th>Departman</th>
+                    <th>Rol</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
                 {
-                    <tr class="align-middle">
-                        <td>@item.KullaniciId</td>
-                        <td><span class="fw-semibold">@item.Ad @item.Soyad</span></td>
-                        <td>@item.Eposta</td>
-
-                        <td>
-                            @(item.Departman != null ? item.Departman.DepartmanAdi : "Atanmadı")
-                        </td>
-                        <td>
-                            @(item.Rol != null ? item.Rol.RolAdi : "Atanmadı")
-                        </td>
-
-                        <td>
-                            @if (item.Durum == true)
-                            {
-                                <span class="badge bg-success-subtle text-success">Aktif</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger-subtle text-danger">Pasif</span>
-                            }
-                        </td>
-
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.KullaniciId" class="text-primary" title="Düzenle">
-                                <i class="ti ti-edit fs-5"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@item.KullaniciId" class="text-danger ms-3" title="Sil">
-                                <i class="ti ti-trash fs-5"></i>
-                            </a>
-                        </td>
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.KullaniciId</td>
+                            <td><span class="fw-semibold">@item.Ad @item.Soyad</span></td>
+                            <td>@item.Eposta</td>
+                            <td>@(item.Departman?.DepartmanAdi ?? "—")</td>
+                            <td>@(item.Rol?.RolAdi ?? "—")</td>
+                            <td>
+                                @if (item.Durum == true)
+                                {
+                                    <span class="badge bg-success-subtle text-success">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger-subtle text-danger">Pasif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Detail" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Detay"><i class="ti ti-eye"></i></a>
+                                <a asp-action="Edit" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Düzenle"><i class="ti ti-edit text-primary"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Sil"><i class="ti ti-trash text-danger"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-secondary">Henüz kayıtlı kullanıcı yok.</td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">
-                        Henüz sisteme kayıtlı bir personel bulunmuyor.
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>

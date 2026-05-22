@@ -8,6 +8,6 @@ namespace Muhasebe.Services.Interfaces
         Task CreateKullaniciAsync(Kullanici kullanici);
         Task UpdateKullaniciAsync(Kullanici kullanici);
         Task DeleteKullaniciAsync(int id);
-        
+        Task<Kullanici> GetKullaniciDetailAsync(int id);
     }
 }

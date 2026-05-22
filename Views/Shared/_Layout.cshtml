@@ -17,6 +17,7 @@
     var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
     string NavClass(string c, string a) => (string.Equals(ctrl, c, StringComparison.OrdinalIgnoreCase) && string.Equals(act, a, StringComparison.OrdinalIgnoreCase)) ? "nav-link active" : "nav-link";
+    string NavCtrlClass(string c) => string.Equals(ctrl, c, StringComparison.OrdinalIgnoreCase) ? "nav-link active" : "nav-link";
     var rolePreview = Context?.Request?.Query["role"].ToString();
     var roleFromClaim = User?.Claims?.FirstOrDefault(c => c.Type == "RolAdi")?.Value;
     var currentRole = !string.IsNullOrWhiteSpace(rolePreview)
@@ -108,16 +109,22 @@
       }
       @if (canSeeDepartment)
       {
-          <li class="px-4 pt-4 pb-2"><small class="nav-text">Departman</small></li>
+          <li class="px-4 pt-4 pb-2"><small class="nav-text">İnsan Kaynakları</small></li>
           <li>
-            <a class="@NavClass("Departman","Personelim")" asp-controller="Departman" asp-action="Personelim"><i class="ti ti-users"></i><span class="nav-text">Personelim</span></a>
+            <a class="@NavCtrlClass("Kullanici")" asp-controller="Kullanici" asp-action="Index"><i class="ti ti-users"></i><span class="nav-text">Kullanıcılar</span></a>
           </li>
       }
       @if (isAdmin)
       {
           <li class="px-4 pt-4 pb-2"><small class="nav-text">Yönetim</small></li>
           <li>
-            <a class="@NavClass("Admin","Index")" asp-controller="Admin" asp-action="Index"><i class="ti ti-settings"></i><span class="nav-text">Yönetim</span></a>
+            <a class="@NavCtrlClass("Departman")" asp-controller="Departman" asp-action="Index"><i class="ti ti-building"></i><span class="nav-text">Departmanlar</span></a>
+          </li>
+          <li>
+            <a class="@NavCtrlClass("DepartmanButce")" asp-controller="DepartmanButce" asp-action="Index"><i class="ti ti-chart-pie"></i><span class="nav-text">Departman Bütçeleri</span></a>
+          </li>
+          <li>
+            <a class="@NavClass("Admin","Index")" asp-controller="Admin" asp-action="Index"><i class="ti ti-settings"></i><span class="nav-text">Sistem Ayarları</span></a>
           </li>
       }
       <li class="px-4 pt-4 pb-2"><small class="nav-text">Hesap</small></li>

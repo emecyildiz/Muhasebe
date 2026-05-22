@@ -1,7 +1,7 @@
-﻿@model Muhasebe.Models.Entities.Kullanici
+@model Muhasebe.Models.Entities.DepartmanButce
 @{
-    ViewData["Title"] = "Kullanıcı Sil";
-    ViewData["PageTitle"] = "Kullanıcı Sil";
+    ViewData["Title"] = "Bütçe Sil";
+    ViewData["PageTitle"] = "Bütçe Kaydını Sil";
     ViewData["PageSubtitle"] = "Bu işlem geri alınamaz.";
 }
 @await Html.PartialAsync("_PageHeader")
@@ -14,9 +14,10 @@
                     <i class="ti ti-alert-triangle me-2"></i> Silme Onayı
                 </div>
                 <div class="card-body p-4 text-center">
-                    <p class="mb-4"><strong>@Model.Ad @Model.Soyad</strong> kullanıcısı kalıcı olarak silinecek.</p>
+                    <p class="mb-2"><strong>@(Model.Departman?.DepartmanAdi ?? $"Departman #{Model.DepartmanId}")</strong></p>
+                    <p class="text-secondary mb-4">@Model.Yil @(Model.Ay.HasValue ? $"/ {Model.Ay}" : "") dönemi — @Model.AyrilanButce.ToString("N2") ₺</p>
                     <form asp-action="Delete" method="post">
-                        <input type="hidden" asp-for="KullaniciId" />
+                        <input type="hidden" asp-for="ButceId" />
                         <button type="submit" class="btn btn-danger">Evet, Sil</button>
                         <a asp-action="Index" class="btn btn-light ms-2">Vazgeç</a>
                     </form>

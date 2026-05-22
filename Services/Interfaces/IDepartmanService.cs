@@ -8,5 +8,6 @@ namespace Muhasebe.Services.Interfaces
         Task CreateDepartmanAsync(Departman departman);
         Task UpdateDepartmanAsync(Departman departman);
         Task DeleteDepartmanAsync(int id);
+        Task<Departman> GetDepartmanDetailAsync(int id);
     }
 }
