@@ -1,0 +1,45 @@
+@model Muhasebe.Models.Entities.IslemKategorisi
+@{
+    ViewData["Title"] = "Yeni Kategori Ekle";
+    ViewData["PageTitle"] = "Yeni Kategori";
+    ViewData["PageSubtitle"] = "Sisteme yeni bir işlem kategorisi ekleyin.";
+    ViewData["ShowBack"] = true;
+    ViewData["BackUrl"] = Url.Action("Index");
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="mb-3">
+                            <label asp-for="KategoriAdi" class="form-label">Kategori Adı</label>
+                            <input asp-for="KategoriAdi" class="form-control" placeholder="Örn: Kırtasiye, Nakliye, Gelir" required maxlength="100" />
+                            <span asp-validation-for="KategoriAdi" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Tur" class="form-label">Tür</label>
+                            <select asp-for="Tur" class="form-select" required>
+                                <option value="">Seçiniz...</option>
+                                <option value="Masraf">Masraf</option>
+                                <option value="Finans">Finans</option>
+                            </select>
+                            <span asp-validation-for="Tur" class="text-danger small"></span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary"><i class="ti ti-check"></i> Kaydet</button>
+                            <a asp-action="Index" class="btn btn-light">İptal</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

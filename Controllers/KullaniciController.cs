@@ -42,7 +42,7 @@ namespace Muhasebe.Controllers
             return View(kullanicilar);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Create()
         {
             await PopulateSelectListsAsync();
@@ -50,11 +50,20 @@ namespace Muhasebe.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Create(Kullanici model)
         {
             ModelState.Remove("Departman");
             ModelState.Remove("Rol");
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            if (aktifRol == "Mudur")
+            {
+                if (int.TryParse(User.FindFirstValue("DepartmanId"), out int mudurDeptId))
+                {
+                    model.DepartmanId = mudurDeptId;
+                }
+            }
 
             if (await _context.Kullanicis.AnyAsync(k => k.Eposta == model.Eposta))
             {
@@ -71,7 +80,7 @@ namespace Muhasebe.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Edit(int id)
         {
             var kullanici = await _kullaniciService.GetKullaniciByIdAsync(id);
@@ -79,12 +88,21 @@ namespace Muhasebe.Controllers
             {
                 return this.RecordNotFound(EntityName, "Kullanici", requestedId: id, listLabel: "Kullanıcı listesine dön");
             }
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+
+            if (aktifRol == "Mudur" && kullanici.DepartmanId != aktifDepartmanId)
+            {
+                return RedirectToAction("AccessDenied", "Auth");
+            }
+
             await PopulateSelectListsAsync(kullanici.DepartmanId, kullanici.RolId);
             return View(kullanici);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Edit(int id, Kullanici model)
         {
             if (id != model.KullaniciId)
@@ -96,6 +114,15 @@ namespace Muhasebe.Controllers
             if (existing == null)
             {
                 return this.RecordNotFound(EntityName, "Kullanici", requestedId: id, listLabel: "Kullanıcı listesine dön");
+            }
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+
+            if (aktifRol == "Mudur")
+            {
+                if (existing.DepartmanId != aktifDepartmanId) return RedirectToAction("AccessDenied", "Auth");
+                model.DepartmanId = aktifDepartmanId; // Güvenlik: değiştirilmesine izin verme
             }
 
             ModelState.Remove("Departman");
@@ -116,7 +143,7 @@ namespace Muhasebe.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Delete(int id)
         {
             var kullanici = await _kullaniciService.GetKullaniciByIdAsync(id);
@@ -124,17 +151,34 @@ namespace Muhasebe.Controllers
             {
                 return this.RecordNotFound(EntityName, "Kullanici", requestedId: id, listLabel: "Kullanıcı listesine dön");
             }
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+
+            if (aktifRol == "Mudur" && kullanici.DepartmanId != aktifDepartmanId)
+            {
+                return RedirectToAction("AccessDenied", "Auth");
+            }
+
             return View(kullanici);
         }
 
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var kullanici = await _kullaniciService.GetKullaniciByIdAsync(id);
             if (kullanici == null)
             {
                 return this.RecordNotFound(EntityName, "Kullanici", requestedId: id, listLabel: "Kullanıcı listesine dön");
+            }
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+
+            if (aktifRol == "Mudur" && kullanici.DepartmanId != aktifDepartmanId)
+            {
+                return RedirectToAction("AccessDenied", "Auth");
             }
 
             await _kullaniciService.DeleteKullaniciAsync(id);
@@ -163,6 +207,14 @@ namespace Muhasebe.Controllers
         private async Task PopulateSelectListsAsync(int? departmanId = null, int? rolId = null)
         {
             var departmanlar = await _departmanService.GetAllDepartmanAsync();
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            if (aktifRol == "Mudur")
+            {
+                int mudurDeptId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+                departmanlar = departmanlar.Where(d => d.DepartmanId == mudurDeptId).ToList();
+                departmanId = mudurDeptId;
+            }
+
             ViewBag.DepartmanId = new SelectList(departmanlar, "DepartmanId", "DepartmanAdi", departmanId);
 
             var roller = await _context.Rols.ToListAsync();
@@ -173,6 +225,14 @@ namespace Muhasebe.Controllers
         public async Task<IActionResult> KullaniciAra(string q)
         {
             var query = _context.Kullanicis.AsQueryable();
+
+            string aktifRol = User.FindFirstValue(ClaimTypes.Role);
+            if (aktifRol == "Mudur")
+            {
+                int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId") ?? "0");
+                query = query.Where(k => k.DepartmanId == aktifDepartmanId);
+            }
+
             if (!string.IsNullOrWhiteSpace(q))
             {
                 query = query.Where(k => (k.Ad + " " + k.Soyad).Contains(q));

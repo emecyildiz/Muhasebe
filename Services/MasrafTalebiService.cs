@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Muhasebe.Common.Enums;
 using Muhasebe.Models.Entities;
 using Muhasebe.Services.Interfaces;
@@ -56,7 +56,7 @@ namespace Muhasebe.Services
                 Aciklama = model.Aciklama,
                 Tutar = model.Tutar,
                 TalepTarihi = DateTime.Now,
-                Durum = (int)DurumEnum.Bekliyor,
+                Durum = DurumEnum.Bekliyor.ToString(),
             };
             await _context.MasrafTalebis.AddAsync(masrafTalebi);
             await _context.SaveChangesAsync();
@@ -67,7 +67,7 @@ namespace Muhasebe.Services
             var talep = await _context.MasrafTalebis.FindAsync(talepId);
             if (talep != null)
             {
-                talep.Durum = durumId;
+                talep.Durum = ((DurumEnum)durumId).ToString();
                 await _context.SaveChangesAsync();
             }
         }

@@ -49,8 +49,6 @@
         </div>
     </div>
 
-    </div>
-
     @if (Model.Maas != null)
     {
         <h5 class="mt-4 mb-3">Maaş Bilgisi</h5>
@@ -81,15 +79,15 @@
                             <td>@talep.TalepTarihi.ToString("dd.MM.yyyy")</td>
                             <td>@talep.Tutar.ToString("C")</td>
                             <td>
-                                @if (talep.Durum == (int)Muhasebe.Common.Enums.DurumEnum.Bekliyor)
+                                @if (talep.Durum == Muhasebe.Common.Enums.DurumEnum.Bekliyor.ToString())
                                 {
                                     <span class="badge bg-warning-subtle text-warning">Bekliyor</span>
                                 }
-                                else if (talep.Durum == (int)Muhasebe.Common.Enums.DurumEnum.Onaylandi)
+                                else if (talep.Durum == Muhasebe.Common.Enums.DurumEnum.Onaylandi.ToString())
                                 {
                                     <span class="badge bg-success-subtle text-success">Onaylandı</span>
                                 }
-                                else if (talep.Durum == (int)Muhasebe.Common.Enums.DurumEnum.Reddedildi)
+                                else if (talep.Durum == Muhasebe.Common.Enums.DurumEnum.Reddedildi.ToString())
                                 {
                                     <span class="badge bg-danger-subtle text-danger">Reddedildi</span>
                                 }
@@ -111,7 +109,7 @@
         </table>
     </div>
 
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
     {
         <div class="d-flex gap-2 mt-4">
             <a asp-action="Edit" asp-route-id="@Model.KullaniciId" class="btn btn-primary btn-sm"><i class="ti ti-edit"></i> Düzenle</a>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Muhasebe.Models.Entities;
@@ -19,7 +19,7 @@ public partial class MasrafTalebi
 
     public DateTime TalepTarihi { get; set; }
 
-    public int Durum { get; set; }
+    public string Durum { get; set; } = null!;
 
     public virtual ICollection<Bildirim> Bildirims { get; set; } = new List<Bildirim>();
 

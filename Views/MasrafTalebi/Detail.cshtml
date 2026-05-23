@@ -52,23 +52,26 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white px-4 py-3">
-                    <h2 class="h6 mb-0">Durum Güncelle</h2>
-                </div>
-                <div class="card-body p-4">
-                    <p class="small text-secondary">Onaylayan kullanıcı auth ile bağlanınca otomatik atanacak.</p>
-                    <form asp-action="UpdateDurum" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" name="talepId" value="@Model.TalepId" />
-                        <div class="mb-3">
-                            <label class="form-label" for="durumId">Yeni durum</label>
-                            <select name="durumId" id="durumId" class="form-select" asp-items="ViewBag.DurumListesi" required></select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Durumu Kaydet</button>
-                    </form>
+        @if (ViewBag.KullaniciRolu == "Admin" || (ViewBag.KullaniciRolu == "Mudur" && Model.TalepEdenKullaniciId != ViewBag.AktifKullaniciId))
+        {
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white px-4 py-3">
+                        <h2 class="h6 mb-0">Durum Güncelle</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="small text-secondary">Durum değişiklikleri anında yansır.</p>
+                        <form asp-action="UpdateDurum" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" name="talepId" value="@Model.TalepId" />
+                            <div class="mb-3">
+                                <label class="form-label" for="durumAdi">Yeni durum</label>
+                                <select name="durumAdi" id="durumAdi" class="form-select" asp-items="ViewBag.DurumListesi" required></select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Durumu Kaydet</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
 </div>

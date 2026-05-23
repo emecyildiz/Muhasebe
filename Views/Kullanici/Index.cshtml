@@ -4,7 +4,7 @@
     ViewData["PageTitle"] = "Kullanıcı Yönetimi";
     ViewData["PageSubtitle"] = "Sistemdeki tüm kullanıcıları buradan yönetebilirsiniz.";
     ViewData["ShowBack"] = false;
-    if (User.IsInRole("Admin"))
+    if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
     {
         ViewData["ActionUrl"] = Url.Action("Create");
         ViewData["ActionText"] = "Yeni Kullanıcı";
@@ -49,7 +49,7 @@
                             </td>
                             <td class="text-end">
                                 <a asp-action="Detail" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Detay"><i class="ti ti-eye"></i></a>
-                                @if (User.IsInRole("Admin"))
+                                @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
                                 {
                                     <a asp-action="Edit" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Düzenle"><i class="ti ti-edit text-primary"></i></a>
                                     <a asp-action="Delete" asp-route-id="@item.KullaniciId" class="btn btn-sm btn-light" title="Sil"><i class="ti ti-trash text-danger"></i></a>
