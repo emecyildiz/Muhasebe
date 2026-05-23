@@ -1,3 +1,4 @@
+@model Muhasebe.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Panel";
 }
@@ -6,7 +7,7 @@
         <div class="col-12">
             <div class="mb-6">
                 <h1 class="fs-3 mb-1">Panel</h1>
-                <p class="text-secondary mb-0">Özet metrikler ve grafikler — verileri backend ile Model üzerinden bağlayabilirsin.</p>
+                <p class="text-secondary mb-0">Genel finansal özet ve metrikleriniz.</p>
             </div>
         </div>
     </div>
@@ -18,9 +19,9 @@
                         <i class="ti ti-report-analytics fs-4"></i>
                     </div>
                     <div>
-                        <h2 class="mb-3 fs-6">Toplam Satış</h2>
-                        <h3 class="fw-bold mb-0">₺25.000</h3>
-                        <p class="text-primary mb-0 small">Örnek veri</p>
+                        <h2 class="mb-3 fs-6">Toplam Gelir</h2>
+                        <h3 class="fw-bold mb-0">@Model.ToplamGelir.ToString("C")</h3>
+                        <p class="text-primary mb-0 small">Kayıtlı gelirler</p>
                     </div>
                 </div>
             </div>
@@ -32,9 +33,9 @@
                         <i class="ti ti-repeat fs-4"></i>
                     </div>
                     <div>
-                        <h2 class="mb-3 fs-6">Toplam Alım</h2>
-                        <h3 class="fw-bold mb-0">₺18.000</h3>
-                        <p class="text-success mb-0 small">Örnek veri</p>
+                        <h2 class="mb-3 fs-6">Toplam Gider</h2>
+                        <h3 class="fw-bold mb-0">@Model.ToplamGider.ToString("C")</h3>
+                        <p class="text-success mb-0 small">Kayıtlı giderler</p>
                     </div>
                 </div>
             </div>
@@ -46,9 +47,9 @@
                         <i class="ti ti-currency-dollar fs-4"></i>
                     </div>
                     <div>
-                        <h2 class="mb-3 fs-6">Giderler</h2>
-                        <h3 class="fw-bold mb-0">₺9.000</h3>
-                        <p class="text-info mb-0 small">Örnek veri</p>
+                        <h2 class="mb-3 fs-6">Maaş Yükü</h2>
+                        <h3 class="fw-bold mb-0">@Model.ToplamMaasYuku.ToString("C")</h3>
+                        <p class="text-info mb-0 small">Aylık maaş toplamı</p>
                     </div>
                 </div>
             </div>
@@ -60,9 +61,9 @@
                         <i class="ti ti-notes fs-4"></i>
                     </div>
                     <div>
-                        <h2 class="mb-3 fs-6">Vadesi Gelen</h2>
-                        <h3 class="fw-bold mb-0">₺4.200</h3>
-                        <p class="text-warning mb-0 small">Örnek veri</p>
+                        <h2 class="mb-3 fs-6">Bekleyen Masraf</h2>
+                        <h3 class="fw-bold mb-0">@Model.BekleyenMasrafTalebi.ToString("C")</h3>
+                        <p class="text-warning mb-0 small">Onay bekleyen talepler</p>
                     </div>
                 </div>
             </div>

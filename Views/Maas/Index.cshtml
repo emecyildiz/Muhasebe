@@ -1,0 +1,57 @@
+@model IEnumerable<Muhasebe.Models.Entities.Maas>
+@{
+    ViewData["Title"] = "Maaş Yönetimi";
+    ViewData["PageTitle"] = "Maaş Listesi";
+    ViewData["PageSubtitle"] = "Kayıtlı maaş bilgileri.";
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
+    {
+        <div class="d-flex mb-3">
+            <a asp-action="Create" class="btn btn-primary"><i class="ti ti-plus"></i> Yeni Maaş Ekle</a>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm table-responsive">
+        <table class="table mb-0 text-nowrap align-middle table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Personel</th>
+                    <th>Aylık Tutar</th>
+                    <th>Başlangıç Tarihi</th>
+                    <th>Bitiş Tarihi</th>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
+                    {
+                        <th>İşlemler</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(item.Kullanici?.Ad + " " + item.Kullanici?.Soyad)</td>
+                        <td class="fw-semibold text-primary">@item.AylikTutar.ToString("N2") ₺</td>
+                        <td>@item.BaslangicTarihi.ToString("dd.MM.yyyy")</td>
+                        <td>@(item.BitisTarihi.HasValue ? item.BitisTarihi.Value.ToString("dd.MM.yyyy") : "—")</td>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
+                        {
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> Düzenle</a>
+                                <a asp-action="Delete" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i> Sil</a>
+                            </td>
+                        }
+                    </tr>
+                }
+                @if(!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-secondary">Listelenecek maaş kaydı bulunamadı.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
