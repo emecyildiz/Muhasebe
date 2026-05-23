@@ -1,36 +1,93 @@
 @{
     Layout = "_LayoutPublic";
-    ViewData["Title"] = "Hoş geldiniz";
+    ViewData["Title"] = "Hoş Geldiniz";
 }
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-5 p-lg-6">
-                    <div class="row align-items-center g-4">
-                        <div class="col-lg-7">
-                            <span class="badge bg-primary-subtle text-primary mb-3">Okul Projesi</span>
-                            <h1 class="display-6 fw-bold mb-3">Muhasebe ve Masraf Yönetim Uygulaması</h1>
-                            <p class="text-secondary mb-4">Bu ekran giriş öncesi ana sayfadır. Kullanıcı önce giriş/kayıt olur, sonra yetkisine göre menüsü filtrelenmiş panel ekranına geçer.</p>
-                            <div class="d-flex flex-wrap gap-2">
-                                <a class="btn btn-primary" asp-controller="Auth" asp-action="Login">Giriş Yap</a>
-                                <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Register">Kayıt Ol</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-5">
-                            <div class="border rounded-3 p-4 bg-light">
-                                <h2 class="h6 mb-3">Rol bazlı ekran akışı</h2>
-                                <ul class="small text-secondary mb-0">
-                                    <li>Personel: Panel + Masraf Talepleri</li>
-                                    <li>Müdür/Yönetici: Onay + Departman modülleri</li>
-                                    <li>Finans: Ana Kasa</li>
-                                    <li>Admin: Tüm modüller + Yönetim</li>
-                                </ul>
-                            </div>
-                        </div>
+
+<div class="container py-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">Yeni Nesil Yönetim</span>
+            <h1 class="display-4 fw-bold text-dark mb-4" style="line-height: 1.2;">
+                Şirketinizin <span class="text-primary">Masraf ve Finans</span> Süreçlerini Kolaylaştırın
+            </h1>
+            <p class="lead text-secondary mb-5">
+                Tüm masraf, onay ve finans süreçlerini tek bir merkezden hızlı, güvenilir ve şeffaf bir şekilde yönetin. İş akışınızı dijitalleştirerek zamandan tasarruf edin.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                <a class="btn btn-primary btn-lg px-5 py-3 rounded-3 fw-medium" asp-controller="Auth" asp-action="Login">
+                    Sisteme Giriş Yap
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block text-end">
+            <!-- Görsel olarak hoş durması için bir placeholder imaj kullanıyoruz -->
+            <img src="https://placehold.co/600x450/e9ecef/495057?text=Muhasebe+Sistemi+Gorseli" alt="Muhasebe Yönetimi" class="img-fluid rounded-4 shadow-sm border" />
+        </div>
+    </div>
+
+    <!-- Özellikler Bölümü -->
+    <div class="row g-4 py-5 mt-4 border-top">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 fw-bold">Neler Yapabilirsiniz?</h2>
+            <p class="text-muted">Sistemdeki yetkinize göre aşağıdaki özellikleri kullanabilirsiniz.</p>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-4">
+                        <i class="ti ti-wallet fs-2 text-primary"></i>
                     </div>
+                    <h3 class="h5 fw-bold mb-3">Personel Masrafları</h3>
+                    <p class="card-text text-secondary small">Personel masraflarını kolayca girebilir, fiş ve fatura görsellerini ekleyerek dijital takip yapabilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-4">
+                        <i class="ti ti-checkbox fs-2 text-success"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">Hızlı Onay Süreci</h3>
+                    <p class="card-text text-secondary small">Yöneticiler, kendilerine düşen departman masraf taleplerini tek tıkla onaylayabilir veya reddedebilir.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-3 mb-4">
+                        <i class="ti ti-building-bank fs-2 text-warning"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">Finans ve Kasa</h3>
+                    <p class="card-text text-secondary small">Onaylanmış masrafların ödemesi muhasebe/finans birimi tarafından kasa üzerinden güvenle tamamlanır.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex p-3 mb-4">
+                        <i class="ti ti-users fs-2 text-info"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">Rol Bazlı Erişim</h3>
+                    <p class="card-text text-secondary small">Admin, Müdür, Personel ve Finans gibi farklı yetki seviyeleriyle verilerinizin güvenliğini sağlayın.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+    .transition-all {
+        transition: all .3s ease-in-out;
+    }
+</style>

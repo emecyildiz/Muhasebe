@@ -1,6 +1,8 @@
-﻿using Muhasebe.Models.Entities;
+using Muhasebe.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Muhasebe.Services.Interfaces;
+using Muhasebe.Common.Helpers;
+
 namespace Muhasebe.Services
 {
     public class KullaniciService : IKullaniciService
@@ -13,12 +15,19 @@ namespace Muhasebe.Services
             _context = context;
         }
 
-        public async Task<List<Kullanici>> GetAllKullaniciAsync()
+        public async Task<List<Kullanici>> GetAllKullaniciAsync(int? departmanId = null)
         {
-            return await _context.Kullanicis
+            var query = _context.Kullanicis
                 .Include(k => k.Rol)
                 .Include(k => k.Departman)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (departmanId.HasValue)
+            {
+                query = query.Where(k => k.DepartmanId == departmanId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Kullanici> GetKullaniciByIdAsync(int id)
@@ -28,6 +37,10 @@ namespace Muhasebe.Services
 
         public async Task CreateKullaniciAsync(Kullanici kullanici)
         {
+
+            kullanici.SifreHash = SifrelemeHelper.Sifrele(kullanici.SifreHash);
+            kullanici.Durum = true;
+
             _context.Kullanicis.Add(kullanici);
             await _context.SaveChangesAsync();
         }
@@ -40,7 +53,10 @@ namespace Muhasebe.Services
                 existingKullanici.Ad = kullanici.Ad;
                 existingKullanici.Soyad = kullanici.Soyad;
                 existingKullanici.Eposta = kullanici.Eposta;
-                existingKullanici.SifreHash = kullanici.SifreHash;
+                if (!string.IsNullOrEmpty(kullanici.SifreHash) && kullanici.SifreHash.Length < 50)
+                {
+                    existingKullanici.SifreHash = SifrelemeHelper.Sifrele(kullanici.SifreHash);
+                }
                 existingKullanici.RolId = kullanici.RolId;
                 existingKullanici.DepartmanId = kullanici.DepartmanId;
                 existingKullanici.IseGirisTarihi = kullanici.IseGirisTarihi;
@@ -65,6 +81,7 @@ namespace Muhasebe.Services
                 .Include(k => k.Rol)
                 .Include(k => k.Departman)
                 .Include(k => k.Maas)
+                .Include(k => k.MasrafTalebis)
                 .FirstOrDefaultAsync(k => k.KullaniciId == id);
         }
     }

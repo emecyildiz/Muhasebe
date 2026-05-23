@@ -10,14 +10,13 @@ public partial class Menu
     public int? UstMenuId { get; set; }
 
     public string MenuAdi { get; set; } = null!;
-
-    public string Url { get; set; } = null!;
-
+    public string ActionAdi { get; set; } = null!;
+    public string ControllerAdi { get; set; } = null!;
     public string? Icon { get; set; }
-
+    public bool Durum { get; set; }
     public int? Sira { get; set; }
 
-    public virtual ICollection<Menu> InverseUstMenu { get; set; } = new List<Menu>();
+    public virtual ICollection<Menu> AltMenuler { get; set; } = new List<Menu>();
 
     public virtual ICollection<RolMenu> RolMenus { get; set; } = new List<RolMenu>();
 

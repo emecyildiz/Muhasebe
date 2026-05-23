@@ -1,0 +1,46 @@
+@model IEnumerable<Muhasebe.Models.Entities.Menu>
+
+@{
+    var anaMenuler = Model.Where(m => m.UstMenuId == null).OrderBy(m => m.Sira).ToList();
+}
+
+<div class="sidebar-brand">
+    Muhasebe
+</div>
+<ul class="nav flex-column sidebar-nav list-unstyled">
+@foreach (var anaMenu in anaMenuler)
+{
+    var altMenuler = Model.Where(m => m.UstMenuId == anaMenu.MenuId).OrderBy(m => m.Sira).ToList();
+
+    if (altMenuler.Any())
+    {
+        // 1. DURUM: Alt menüsü olan bir menü (Dropdown)
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="@anaMenu.Icon fs-5 me-2"></i>
+                @anaMenu.MenuAdi
+            </a>
+            <ul class="dropdown-menu">
+                @foreach (var altMenu in altMenuler)
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="@altMenu.ControllerAdi" asp-action="@altMenu.ActionAdi">
+                            <i class="@altMenu.Icon me-2"></i> @altMenu.MenuAdi
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        // 2. DURUM: Alt menüsü olmayan standart tekli menü
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="@anaMenu.ControllerAdi" asp-action="@anaMenu.ActionAdi">
+                <i class="@anaMenu.Icon fs-5 me-2"></i>
+                @anaMenu.MenuAdi
+            </a>
+        </li>
+    }
+}
+</ul>

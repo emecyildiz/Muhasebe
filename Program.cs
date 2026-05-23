@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Muhasebe.Data;
 using Muhasebe.Services;
 using Muhasebe.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MuhasebeContext>(options =>
@@ -11,6 +12,15 @@ builder.Services.AddDbContext<MuhasebeContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login"; // Kullanýcý giriþ yapmamýþsa atýlacaðý sayfa
+        options.AccessDeniedPath = "/Auth/AccessDenied"; // Yetkisi olmayan sayfaya girerse atýlacaðý sayfa
+        options.Cookie.Name = "MuhasebeAuthCookie";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8); // 8 saatlik oturum süresi
+        options.SlidingExpiration = true;
+    });
 
 builder.Services.AddScoped<IDepartmanService, DepartmanService>();
 builder.Services.AddScoped<IFinansService, FinansService>();
@@ -38,6 +48,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?statusCode={0}");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

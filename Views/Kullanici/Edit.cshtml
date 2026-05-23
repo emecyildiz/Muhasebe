@@ -1,4 +1,4 @@
-﻿@model Muhasebe.Models.Entities.Kullanici
+@model Muhasebe.Models.Entities.Kullanici
 @{
     ViewData["Title"] = "Kullanıcı Düzenle";
     ViewData["PageTitle"] = "Kullanıcı Düzenle";
@@ -55,8 +55,9 @@
                             </div>
                             <div class="col-md-6 d-flex align-items-end">
                                 <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" asp-for="Durum" />
-                                    <label class="form-check-label" asp-for="Durum">Hesap aktif</label>
+                                    <input class="form-check-input" type="checkbox" name="Durum" id="Durum" value="true" @(Model.Durum == true ? "checked" : "") />
+                                    <input type="hidden" name="Durum" value="false" />
+                                    <label class="form-check-label" for="Durum">Hesap aktif</label>
                                 </div>
                             </div>
                         </div>

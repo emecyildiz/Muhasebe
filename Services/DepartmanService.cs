@@ -1,4 +1,4 @@
-﻿using Muhasebe.Models.Entities;
+using Muhasebe.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Muhasebe.Services.Interfaces;
 namespace Muhasebe.Services
@@ -14,7 +14,7 @@ namespace Muhasebe.Services
 
         public async Task<List<Departman>> GetAllDepartmanAsync()
         {
-            return await _context.Departmen.ToListAsync();
+            return await _context.Departmen.Include(d => d.Mudur).ToListAsync();
         }
 
         public async Task<Departman> GetDepartmanByIdAsync(int id)

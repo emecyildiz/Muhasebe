@@ -246,10 +246,12 @@ public partial class MuhasebeContext : DbContext
             entity.Property(e => e.Icon).HasMaxLength(50);
             entity.Property(e => e.MenuAdi).HasMaxLength(50);
             entity.Property(e => e.Sira).HasDefaultValue(0);
-            entity.Property(e => e.Url).HasMaxLength(100);
             entity.Property(e => e.UstMenuId).HasColumnName("UstMenuID");
+            entity.Property(e => e.ControllerAdi).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.ActionAdi).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Durum).HasDefaultValue(true);
 
-            entity.HasOne(d => d.UstMenu).WithMany(p => p.InverseUstMenu)
+            entity.HasOne(d => d.UstMenu).WithMany(p => p.AltMenuler)
                 .HasForeignKey(d => d.UstMenuId)
                 .HasConstraintName("FK_Menu_UstMenu");
         });

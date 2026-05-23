@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Muhasebe.Common.Enums;
@@ -6,9 +7,11 @@ using Muhasebe.Common.Helpers;
 using Muhasebe.Models.Entities;
 using Muhasebe.Services.Interfaces;
 using Muhasebe.ViewModels;
+using System.Security.Claims;
 
 namespace Muhasebe.Controllers
 {
+    [Authorize]
     public class MasrafTalebiController : Controller
     {
         private const string EntityName = "Masraf talebi";
@@ -34,12 +37,13 @@ namespace Muhasebe.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(MasrafTalebiCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                int aktifKullaniciId = 1;
-                int aktifDepartmanId = 2;
+                int aktifKullaniciId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                int aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId"));
 
                 await _masrafTalebiService.EkleAsync(model, aktifKullaniciId, aktifDepartmanId);
                 return RedirectToAction(nameof(Index));
@@ -74,6 +78,7 @@ namespace Muhasebe.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> UpdateDurum(int talepId, int durumId)
         {
             var talep = await _masrafTalebiService.GetTalepByIdAsync(talepId);
@@ -82,8 +87,8 @@ namespace Muhasebe.Controllers
                 return this.RecordNotFound(EntityName, "MasrafTalebi", requestedId: talepId, listLabel: "Talep listesine dön");
             }
 
-            int onaylayanId = 5;
-            await _masrafTalebiService.DurumGuncelleAsync(talepId, durumId, onaylayanId);
+            int onaylayanYoneticiId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _masrafTalebiService.DurumGuncelleAsync(talepId, durumId, onaylayanYoneticiId);
             return RedirectToAction(nameof(Detail), new { id = talepId });
         }
 

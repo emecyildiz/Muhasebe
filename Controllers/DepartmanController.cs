@@ -5,6 +5,7 @@ using Muhasebe.Common.Helpers;
 
 namespace Muhasebe.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class DepartmanController : Controller
     {
         private const string EntityName = "Departman";
@@ -39,10 +40,10 @@ namespace Muhasebe.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var departman = await _departmanService.GetDepartmanByIdAsync(id);
+            var departman = await _departmanService.GetDepartmanDetailAsync(id);
             if (departman == null)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
             return View(departman);
         }
@@ -52,13 +53,13 @@ namespace Muhasebe.Controllers
         {
             if (id != model.DepartmanId)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
 
             var existing = await _departmanService.GetDepartmanByIdAsync(id);
             if (existing == null)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
 
             if (ModelState.IsValid)
@@ -74,7 +75,7 @@ namespace Muhasebe.Controllers
             var departman = await _departmanService.GetDepartmanByIdAsync(id);
             if (departman == null)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
             return View(departman);
         }
@@ -85,7 +86,7 @@ namespace Muhasebe.Controllers
             var departman = await _departmanService.GetDepartmanByIdAsync(id);
             if (departman == null)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
 
             await _departmanService.DeleteDepartmanAsync(id);
@@ -97,7 +98,7 @@ namespace Muhasebe.Controllers
             var departman = await _departmanService.GetDepartmanDetailAsync(id);
             if (departman == null)
             {
-                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dön");
+                return this.RecordNotFound(EntityName, "Departman", requestedId: id, listLabel: "Departman listesine dï¿½n");
             }
 
             return View(departman);

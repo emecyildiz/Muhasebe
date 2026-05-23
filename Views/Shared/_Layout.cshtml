@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon-32x32.png" asp-append-version="true" />
     <link rel="apple-touch-icon" sizes="180x180" href="~/images/apple-touch-icon.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" crossorigin />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Muhasebe.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -22,7 +23,7 @@
     var roleFromClaim = User?.Claims?.FirstOrDefault(c => c.Type == "RolAdi")?.Value;
     var currentRole = !string.IsNullOrWhiteSpace(rolePreview)
         ? rolePreview
-        : (!string.IsNullOrWhiteSpace(roleFromClaim) ? roleFromClaim : "Personel");
+        : (!string.IsNullOrWhiteSpace(roleFromClaim) ? roleFromClaim : "Admin");
     var roleNormalized = currentRole.Trim().ToLowerInvariant();
     var isAdmin = roleNormalized.Contains("admin");
     var isManager = roleNormalized.Contains("mudur") || roleNormalized.Contains("yönetici") || roleNormalized.Contains("yonetici");
@@ -67,12 +68,12 @@
             <div class="d-flex gap-3 align-items-center border-dashed border-bottom px-3 py-3">
               <img src="~/images/placeholder-avatar-md.png" alt="" class="avatar avatar-md rounded-circle" width="48" height="48" asp-append-version="true" />
               <div>
-                <h4 class="mb-0 small">Kullanıcı</h4>
+                <h4 class="mb-0 small">@(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Misafir")</h4>
                 <p class="mb-0 small text-muted">Rol: @currentRole</p>
               </div>
             </div>
             <div class="p-3 d-flex flex-column gap-1 small lh-lg">
-              <a asp-controller="Auth" asp-action="Login" class="text-decoration-none"><span>Giriş sayfası</span></a>
+              <a asp-controller="Auth" asp-action="Logout" class="text-decoration-none text-danger"><span>Çıkış Yap</span></a>
             </div>
           </div>
         </li>
@@ -81,67 +82,50 @@
   </nav>
 
   <aside id="sidebar" class="sidebar">
-    <div class="logo-area">
-      <a asp-controller="Home" asp-action="Dashboard" class="d-inline-flex align-items-center text-decoration-none">
-        <img src="~/images/logo.svg" alt="Muhasebe" height="28" asp-append-version="true" />
-      </a>
-    </div>
-    <ul class="nav flex-column">
-      <li class="px-4 py-2"><small class="nav-text">Uygulama</small></li>
-      <li>
-        <a class="@NavClass("Home","Dashboard")" asp-controller="Home" asp-action="Dashboard"><i class="ti ti-home"></i><span class="nav-text">Panel</span></a>
-      </li>
-      <li>
-        <a class="@NavCtrlClass("MasrafTalebi")" asp-controller="MasrafTalebi" asp-action="Index"><i class="ti ti-wallet"></i><span class="nav-text">Masraf Talepleri</span></a>
-      </li>
-      @if (canSeeFinance)
-      {
-          <li>
-            <a class="@NavClass("Finans","AnaKasa")" asp-controller="Finans" asp-action="AnaKasa"><i class="ti ti-building-bank"></i><span class="nav-text">Ana Kasa</span></a>
-          </li>
-      }
-      @if (canSeeApprovals)
-      {
-          <li class="px-4 pt-4 pb-2"><small class="nav-text">Onay</small></li>
-          <li>
-            <a class="@NavClass("Onay","BekleyenTalepler")" asp-controller="Onay" asp-action="BekleyenTalepler"><i class="ti ti-checkbox"></i><span class="nav-text">Onay Bekleyenler</span></a>
-          </li>
-      }
-      @if (canSeeDepartment)
-      {
-          <li class="px-4 pt-4 pb-2"><small class="nav-text">İnsan Kaynakları</small></li>
-          <li>
-            <a class="@NavCtrlClass("Kullanici")" asp-controller="Kullanici" asp-action="Index"><i class="ti ti-users"></i><span class="nav-text">Kullanıcılar</span></a>
-          </li>
-      }
-      @if (isAdmin)
-      {
-          <li class="px-4 pt-4 pb-2"><small class="nav-text">Yönetim</small></li>
-          <li>
-            <a class="@NavCtrlClass("Departman")" asp-controller="Departman" asp-action="Index"><i class="ti ti-building"></i><span class="nav-text">Departmanlar</span></a>
-          </li>
-          <li>
-            <a class="@NavCtrlClass("DepartmanButce")" asp-controller="DepartmanButce" asp-action="Index"><i class="ti ti-chart-pie"></i><span class="nav-text">Departman Bütçeleri</span></a>
-          </li>
-          <li>
-            <a class="@NavClass("Admin","Index")" asp-controller="Admin" asp-action="Index"><i class="ti ti-settings"></i><span class="nav-text">Sistem Ayarları</span></a>
-          </li>
-      }
-      <li class="px-4 pt-4 pb-2"><small class="nav-text">Hesap</small></li>
-      <li>
-        <a class="nav-link" asp-controller="Auth" asp-action="Login"><i class="ti ti-login"></i><span class="nav-text">Çıkış</span></a>
-      </li>
-      <li>
-        <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="ti ti-home"></i><span class="nav-text">Giriş Öncesi Sayfa</span></a>
-      </li>
-    </ul>
+    @await Component.InvokeAsync("SidebarMenu")
   </aside>
 
   <main id="content" class="content py-10">
     @RenderBody()
   </main>
 
-  <script type="module" src="~/js/main.js" asp-append-version="true" crossorigin></script>
-    @await RenderSectionAsync("Scripts", required: false)
+  <script type="module" src="~/js/main.js" asp-append-version="true" crossorigin="anonymous"></script>
+  
+  <!-- JavaScript sidebar toggle entegrasyonu -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleBtn = document.getElementById("toggleBtn");
+        const mobileBtn = document.getElementById("mobileBtn");
+        const sidebar = document.getElementById("sidebar");
+        const topbar = document.getElementById("topbar");
+        const content = document.getElementById("content");
+        const overlay = document.getElementById("overlay");
+
+        if (toggleBtn && sidebar && topbar && content) {
+            toggleBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("collapsed");
+                topbar.classList.toggle("full");
+                content.classList.toggle("full");
+            });
+        }
+
+        if (mobileBtn && sidebar && overlay) {
+            mobileBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("mobile-show");
+                overlay.classList.toggle("show");
+            });
+        }
+
+        if (overlay && sidebar) {
+            overlay.addEventListener("click", function() {
+                sidebar.classList.remove("mobile-show");
+                overlay.classList.remove("show");
+            });
+        }
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

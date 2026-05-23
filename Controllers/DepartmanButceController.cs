@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Muhasebe.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Muhasebe.Models.Entities;
@@ -6,6 +6,7 @@ using Muhasebe.Common.Helpers;
 
 namespace Muhasebe.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class DepartmanButceController : Controller
     {
         private const string EntityName = "Departman bütçesi";

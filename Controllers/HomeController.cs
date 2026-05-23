@@ -15,9 +15,14 @@ namespace Muhasebe.Controllers
 
         public IActionResult Index()
         {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard");
+            }
             return View();
         }
 
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public IActionResult Dashboard()
         {
             return View();
