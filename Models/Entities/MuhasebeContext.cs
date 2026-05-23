@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +20,8 @@ public partial class MuhasebeContext : DbContext
     public virtual DbSet<Departman> Departmen { get; set; }
 
     public virtual DbSet<DepartmanButce> DepartmanButces { get; set; }
+    
+    public virtual DbSet<DepartmanButceDetay> DepartmanButceDetays { get; set; }
 
     public virtual DbSet<FinansalIslem> FinansalIslems { get; set; }
 
@@ -108,6 +110,18 @@ public partial class MuhasebeContext : DbContext
                 .HasForeignKey(d => d.DepartmanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Butce_Departman");
+        });
+        
+        modelBuilder.Entity<DepartmanButceDetay>(entity =>
+        {
+            entity.HasKey(e => e.DetayId).HasName("PK__Departma__8E8163455EE90821");
+
+            entity.ToTable("DepartmanButceDetay");
+
+            entity.Property(e => e.AyrilanTutar).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.KullanilanTutar)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 2)");
         });
 
         modelBuilder.Entity<FinansalIslem>(entity =>

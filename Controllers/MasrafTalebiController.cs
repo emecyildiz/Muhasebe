@@ -124,6 +124,23 @@ namespace Muhasebe.Controllers
             // "IptalEdildi" listede olmadığı için hata alınıyor olabilir. 
             // Şimdilik sadece kısıtlamada olanları kaydedelim.
             talep.Durum = durumAdi;
+            
+            // Kullanıcıya bildirim gönder
+            var mesaj = durumAdi == "Onaylandi" ? "Masraf talebiniz onaylandı." : 
+                        durumAdi == "Reddedildi" ? "Masraf talebiniz reddedildi." : 
+                        $"Masraf talebinizin durumu güncellendi: {durumAdi}";
+
+            var bildirim = new Bildirim
+            {
+                AliciId = talep.TalepEdenKullaniciId,
+                TalepId = talep.TalepId,
+                BildirimTuru = "Durum Güncellemesi",
+                Mesaj = mesaj,
+                Okundu = false,
+                OlusturulmaTarihi = DateTime.Now
+            };
+
+            await _context.Bildirims.AddAsync(bildirim);
             await _context.SaveChangesAsync();
             
             return RedirectToAction(nameof(Detail), new { id = talepId });

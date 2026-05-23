@@ -1,21 +1,58 @@
 @model IEnumerable<Muhasebe.Models.Entities.DepartmanButce>
 @{
     ViewData["Title"] = "Departman Bütçeleri";
-    ViewData["PageTitle"] = "Departman Bütçe Yönetimi";
-    ViewData["PageSubtitle"] = "Departmanlara ayrılan ve kullanılan bütçeleri yönetin.";
+    ViewData["PageTitle"] = User.IsInRole("Admin") ? "Departman Bütçe Yönetimi" : "Bütçe Yönetimi";
+    ViewData["PageSubtitle"] = User.IsInRole("Admin") ? "Departmanlara ayrılan ve kullanılan bütçeleri yönetin." : "Departmanınıza ayrılan bütçe dönemlerini yönetin.";
     ViewData["ShowBack"] = false;
-    ViewData["ActionUrl"] = Url.Action("Create");
-    ViewData["ActionText"] = "Yeni Bütçe";
+    
+    if (User.IsInRole("Admin"))
+    {
+        ViewData["ActionUrl"] = Url.Action("Create");
+        ViewData["ActionText"] = "Yeni Bütçe";
+    }
 }
 @await Html.PartialAsync("_PageHeader")
 
 <div class="container-fluid pb-4">
+    @if (User.IsInRole("Mudur"))
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Toplam Ana Bütçe</h6>
+                        <h3 class="mb-0">@((ViewBag.ToplamAnaButce ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-info text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Dağıtılan / Harcanan Tutar</h6>
+                        <h3 class="mb-0">@((ViewBag.DagitilanTutar ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm @((ViewBag.KalanButce ?? 0) < 0 ? "bg-danger" : "bg-success") text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Kalan Bütçe</h6>
+                        <h3 class="mb-0">@((ViewBag.KalanButce ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <div class="card table-responsive border-0 shadow-sm">
         <table class="table mb-0 text-nowrap table-hover align-middle">
             <thead class="table-light">
                 <tr>
                     <th>#</th>
-                    <th>Departman</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Departman</th>
+                    }
                     <th>Dönem</th>
                     <th class="text-end">Ayrılan</th>
                     <th class="text-end">Kullanılan</th>
@@ -31,17 +68,29 @@
                         var kalan = item.AyrilanButce - (item.KullanilanButce ?? 0);
                         <tr>
                             <td>@item.ButceId</td>
-                            <td><span class="fw-semibold">@(item.Departman?.DepartmanAdi ?? $"ID {item.DepartmanId}")</span></td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td><span class="fw-semibold">@(item.Departman?.DepartmanAdi ?? $"ID {item.DepartmanId}")</span></td>
+                            }
                             <td>@item.Yil @(item.Ay.HasValue ? $"/ {item.Ay:00}" : "")</td>
-                            <td class="text-end">@item.AyrilanButce.ToString("N2") ₺</td>
-                            <td class="text-end">@((item.KullanilanButce ?? 0).ToString("N2")) ₺</td>
+                            <td class="text-end text-primary fw-bold">@item.AyrilanButce.ToString("N2") ₺</td>
+                            <td class="text-end text-info fw-bold">@((item.KullanilanButce ?? 0).ToString("N2")) ₺</td>
                             <td class="text-end">
-                                <span class="@(kalan < 0 ? "text-danger" : "text-success") fw-semibold">@kalan.ToString("N2") ₺</span>
+                                <span class="@(kalan < 0 ? "text-danger" : "text-success") fw-bold">@kalan.ToString("N2") ₺</span>
                             </td>
                             <td class="text-end">
-                                <a asp-action="Detail" asp-route-id="@item.DepartmanId" class="btn btn-sm btn-light" title="Departman bütçe geçmişi"><i class="ti ti-history"></i></a>
-                                <a asp-action="Edit" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Düzenle"><i class="ti ti-edit text-primary"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Sil"><i class="ti ti-trash text-danger"></i></a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Detail" asp-route-id="@item.DepartmanId" class="btn btn-sm btn-light" title="Departman bütçe geçmişi"><i class="ti ti-history"></i></a>
+                                    <a asp-action="Edit" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Düzenle"><i class="ti ti-edit text-primary"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.ButceId" class="btn btn-sm btn-light" title="Sil"><i class="ti ti-trash text-danger"></i></a>
+                                }
+                                @if (User.IsInRole("Mudur") || User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Allocate" asp-route-id="@item.ButceId" class="btn btn-sm btn-primary ms-1" title="Bütçeyi Dağıt">
+                                        <i class="ti ti-cash"></i> Bütçeyi Dağıt
+                                    </a>
+                                }
                             </td>
                         </tr>
                     }
@@ -49,7 +98,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-secondary">Henüz bütçe kaydı yok.</td>
+                        <td colspan="@(User.IsInRole("Admin") ? 7 : 6)" class="text-center py-5 text-secondary">Henüz bütçe kaydı yok.</td>
                     </tr>
                 }
             </tbody>

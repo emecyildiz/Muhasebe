@@ -31,13 +31,16 @@ namespace Muhasebe.Controllers
             {
                 var aktifDepartmanId = int.Parse(User.FindFirstValue("DepartmanId"));
                 maaslar = maaslar.Where(m => m.Kullanici.DepartmanId == aktifDepartmanId);
+                await PopulateMaasButcesiBilgileriAsync(aktifDepartmanId);
             }
             else if (userRole != "Admin")
             {
                 // Çalışanlar sadece kendilerini görür
                 maaslar = maaslar.Where(m => m.KullaniciId == aktifKullaniciId);
+                await PopulateMaasButcesiBilgileriAsync(maaslar.FirstOrDefault()?.Kullanici?.DepartmanId);
             }
 
+            ViewBag.AktifKullaniciId = aktifKullaniciId;
             return View(await maaslar.ToListAsync());
         }
 
@@ -81,11 +84,112 @@ namespace Muhasebe.Controllers
             return false;
         }
 
+        private async Task<int> GetMaasKategoriIdAsync()
+        {
+            var maasKategori = await _context.IslemKategorisis.FirstOrDefaultAsync(k => k.KategoriAdi == "Maaş Bütçesi");
+            if (maasKategori == null)
+            {
+                maasKategori = new IslemKategorisi { KategoriAdi = "Maaş Bütçesi", Tur = "Gider" };
+                _context.IslemKategorisis.Add(maasKategori);
+                await _context.SaveChangesAsync();
+            }
+            return maasKategori.KategoriId;
+        }
+
+        private async Task PopulateMaasButcesiBilgileriAsync(int? departmanId = null)
+        {
+            if (departmanId == null)
+            {
+                var claimDept = User.FindFirstValue("DepartmanId");
+                if (!int.TryParse(claimDept, out int dId)) return;
+                departmanId = dId;
+            }
+
+            var aktifButce = await _context.DepartmanButces
+                .Where(b => b.DepartmanId == departmanId)
+                .OrderByDescending(b => b.Yil)
+                .ThenByDescending(b => b.Ay)
+                .FirstOrDefaultAsync();
+
+            decimal toplamMaasButcesi = 0;
+            decimal kullanilanMaas = 0;
+
+            if (aktifButce != null)
+            {
+                int maasKategoriId = await GetMaasKategoriIdAsync();
+                var maasButceDetay = await _context.DepartmanButceDetays
+                    .FirstOrDefaultAsync(d => d.ButceId == aktifButce.ButceId && d.KategoriId == maasKategoriId);
+
+                toplamMaasButcesi = maasButceDetay?.AyrilanTutar ?? 0;
+
+                kullanilanMaas = await _context.Maas
+                    .Include(m => m.Kullanici)
+                    .ThenInclude(k => k.Rol)
+                    .Where(m => m.Kullanici.DepartmanId == departmanId && m.BitisTarihi == null && m.Kullanici.Rol.RolAdi != "Mudur" && m.Kullanici.Rol.RolAdi != "Admin")
+                    .SumAsync(m => m.AylikTutar);
+            }
+
+            ViewBag.ToplamMaasButcesi = toplamMaasButcesi;
+            ViewBag.KullanilanMaas = kullanilanMaas;
+            ViewBag.KalanMaas = toplamMaasButcesi - kullanilanMaas;
+        }
+
+        private async Task<string?> ValidateMaasButcesiAsync(int kullaniciId, decimal yeniMaasTutar, int? mevcutMaasId = null)
+        {
+            var user = await _context.Kullanicis.Include(k => k.Rol).FirstOrDefaultAsync(k => k.KullaniciId == kullaniciId);
+            if (user == null) return "Kullanıcı bulunamadı.";
+
+            // Eğer maaşı atanan kişi Müdür veya Admin ise, departman bütçesi limitine takılmaz (Şirket ana bütçesinden karşılanır).
+            if (user.Rol?.RolAdi == "Mudur" || user.Rol?.RolAdi == "Admin")
+            {
+                return null;
+            }
+
+            // Aktif bütçeyi bul (örneğin en son yıla ait)
+            var aktifButce = await _context.DepartmanButces
+                .Where(b => b.DepartmanId == user.DepartmanId)
+                .OrderByDescending(b => b.Yil)
+                .ThenByDescending(b => b.Ay)
+                .FirstOrDefaultAsync();
+
+            if (aktifButce == null)
+            {
+                return "Departmanın tanımlı bir bütçesi bulunmamaktadır.";
+            }
+
+            int maasKategoriId = await GetMaasKategoriIdAsync();
+
+            var maasButceDetay = await _context.DepartmanButceDetays
+                .FirstOrDefaultAsync(d => d.ButceId == aktifButce.ButceId && d.KategoriId == maasKategoriId);
+
+            decimal toplamMaasButcesi = maasButceDetay?.AyrilanTutar ?? 0;
+
+            // Departmandaki aktif personelin maaş toplamı (Müdürler hariç)
+            var digerMaaslar = await _context.Maas
+                .Include(m => m.Kullanici)
+                .ThenInclude(k => k.Rol)
+                .Where(m => m.Kullanici.DepartmanId == user.DepartmanId && m.BitisTarihi == null && m.Kullanici.Rol.RolAdi != "Mudur" && m.Kullanici.Rol.RolAdi != "Admin")
+                .ToListAsync();
+
+            decimal mevcutToplam = digerMaaslar
+                .Where(m => m.MaasId != mevcutMaasId)
+                .Sum(m => m.AylikTutar);
+
+            if ((mevcutToplam + yeniMaasTutar) > toplamMaasButcesi)
+            {
+                decimal kalan = toplamMaasButcesi - mevcutToplam;
+                return $"Bu işlem departmanın maaş bütçesini aşıyor! (Atanabilir maksimum tutar: {kalan:N2} ₺)";
+            }
+
+            return null; // Sorun yok
+        }
+
         // GET: Maas/Create
         [Authorize(Roles = "Admin,Mudur")]
         public async Task<IActionResult> Create()
         {
             await PopulateKullaniciListAsync();
+            await PopulateMaasButcesiBilgileriAsync();
             return View();
         }
 
@@ -105,12 +209,23 @@ namespace Muhasebe.Controllers
                     return Forbid();
                 }
 
+                // Maaş Bütçesi Kontrolü
+                var validationError = await ValidateMaasButcesiAsync(maas.KullaniciId, maas.AylikTutar);
+                if (validationError != null)
+                {
+                    ModelState.AddModelError("", validationError);
+                    await PopulateKullaniciListAsync(maas.KullaniciId);
+                    await PopulateMaasButcesiBilgileriAsync();
+                    return View(maas);
+                }
+
                 _context.Add(maas);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
             await PopulateKullaniciListAsync(maas.KullaniciId);
+            await PopulateMaasButcesiBilgileriAsync();
             return View(maas);
         }
 
@@ -129,6 +244,7 @@ namespace Muhasebe.Controllers
             }
 
             await PopulateKullaniciListAsync(maas.KullaniciId);
+            await PopulateMaasButcesiBilgileriAsync(maas.Kullanici.DepartmanId);
             return View(maas);
         }
 
@@ -150,6 +266,16 @@ namespace Muhasebe.Controllers
                     return Forbid();
                 }
 
+                // Maaş Bütçesi Kontrolü
+                var validationError = await ValidateMaasButcesiAsync(maas.KullaniciId, maas.AylikTutar, maas.MaasId);
+                if (validationError != null)
+                {
+                    ModelState.AddModelError("", validationError);
+                    await PopulateKullaniciListAsync(maas.KullaniciId);
+                    await PopulateMaasButcesiBilgileriAsync();
+                    return View(maas);
+                }
+
                 try
                 {
                     _context.Update(maas);
@@ -164,6 +290,7 @@ namespace Muhasebe.Controllers
             }
 
             await PopulateKullaniciListAsync(maas.KullaniciId);
+            await PopulateMaasButcesiBilgileriAsync(maas.Kullanici?.DepartmanId);
             return View(maas);
         }
 

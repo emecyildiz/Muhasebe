@@ -1,0 +1,147 @@
+@model Muhasebe.ViewModels.DepartmanButce.AllocateViewModel
+
+@{
+    ViewData["Title"] = "Bütçe Dağıtımı";
+    ViewData["PageTitle"] = "Bütçeyi Kategorilere Dağıt";
+    ViewData["PageSubtitle"] = $"{Model.DepartmanAdi} departmanı bütçesini işlem kategorilerine göre tahsis edin.";
+    ViewData["ShowBack"] = true;
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row">
+        <!-- Bütçe Özeti -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h5 class="card-title mb-0"><i class="ti ti-chart-pie text-primary me-2"></i>Bütçe Özeti</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pb-2 border-bottom">
+                        <span class="text-secondary">Departman</span>
+                        <span class="fw-bold">@Model.DepartmanAdi</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 pb-2 border-bottom">
+                        <span class="text-secondary">Toplam Ana Bütçe</span>
+                        <span class="fw-bold text-primary">@Model.ToplamButce.ToString("N2") ₺</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 pb-2 border-bottom">
+                        <span class="text-secondary">Şu Ana Kadar Dağıtılan</span>
+                        <span class="fw-bold text-info" id="summaryDagitilan">@((Model.ToplamDagitilan + Model.MaasButcesi).ToString("N2")) ₺</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Dağıtılabilir Kalan Bütçe</span>
+                        <span class="fw-bold @(Model.ToplamButce - Model.ToplamDagitilan - Model.MaasButcesi < 0 ? "text-danger" : "text-success")" id="summaryKalan">
+                            @((Model.ToplamButce - Model.ToplamDagitilan - Model.MaasButcesi).ToString("N2")) ₺
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bütçe Dağıtım Formu -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Allocate" method="post" id="allocateForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="ButceId" />
+                        <input type="hidden" id="hiddenToplamButce" value="@Model.ToplamButce" />
+
+                        <div class="table-responsive">
+                            <table class="table align-middle border">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>İşlem Kategorisi</th>
+                                        <th class="text-end" style="width: 250px;">Ayrılacak Tutar (₺)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-warning">
+                                        <td>
+                                            <i class="ti ti-cash text-warning me-2"></i>
+                                            <span class="fw-bold">Maaş Bütçesi</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <input type="number" asp-for="MaasButcesi" class="form-control form-control-sm text-end allocate-input" step="0.01" min="0" />
+                                        </td>
+                                    </tr>
+                                    @for (int i = 0; i < Model.Allocations.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" asp-for="Allocations[i].KategoriId" />
+                                                <input type="hidden" asp-for="Allocations[i].KategoriAdi" />
+                                                <span class="fw-semibold">@Model.Allocations[i].KategoriAdi</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <input type="number" asp-for="Allocations[i].AyrilanTutar" class="form-control form-control-sm text-end allocate-input" step="0.01" min="0" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th class="text-end">Toplam Dağıtılan:</th>
+                                        <th class="text-end text-primary" id="tableDagitilanToplami">@((Model.ToplamDagitilan + Model.MaasButcesi).ToString("N2")) ₺</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a asp-action="Index" class="btn btn-light me-2">İptal</a>
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">Bütçeyi Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const toplamButce = parseFloat($('#hiddenToplamButce').val().replace(',', '.'));
+            
+            function calculateTotal() {
+                let total = 0;
+                $('.allocate-input').each(function () {
+                    const val = parseFloat($(this).val()) || 0;
+                    total += val;
+                });
+                
+                // Format numbers properly
+                const formattedTotal = total.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const kalan = toplamButce - total;
+                const formattedKalan = kalan.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                $('#tableDagitilanToplami').text(formattedTotal + ' ₺');
+                $('#summaryDagitilan').text(formattedTotal + ' ₺');
+                
+                const $summaryKalan = $('#summaryKalan');
+                $summaryKalan.text(formattedKalan + ' ₺');
+                
+                if (kalan < 0) {
+                    $summaryKalan.removeClass('text-success').addClass('text-danger');
+                    $('#btnSubmit').prop('disabled', true);
+                    if ($('.alert-kalan').length === 0) {
+                        $('#allocateForm').prepend('<div class="alert alert-danger alert-kalan">Dağıtılan toplam tutar, ana bütçeyi aşamaz!</div>');
+                    }
+                } else {
+                    $summaryKalan.removeClass('text-danger').addClass('text-success');
+                    $('#btnSubmit').prop('disabled', false);
+                    $('.alert-kalan').remove();
+                }
+            }
+
+            $('.allocate-input').on('input', function () {
+                calculateTotal();
+            });
+            
+            // İlk açılışta hesapla
+            calculateTotal();
+        });
+    </script>
+}

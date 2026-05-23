@@ -1,0 +1,51 @@
+@model IEnumerable<Muhasebe.Models.Entities.Bildirim>
+
+@{
+    var bildirimSayisi = Model.Count();
+}
+
+<a class="position-relative btn-icon btn-sm btn-light btn rounded-circle" data-bs-toggle="dropdown" aria-expanded="false" href="#" role="button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+         class="icon icon-tabler icons-tabler-outline icon-tabler-bell">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+        <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+    </svg>
+    @if (bildirimSayisi > 0)
+    {
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mt-2 ms-n2">
+            @bildirimSayisi<span class="visually-hidden">okunmamış bildirim</span>
+        </span>
+    }
+</a>
+<div class="dropdown-menu dropdown-menu-end dropdown-menu-lg p-0" style="width: 320px;">
+    <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+        <h6 class="mb-0 fw-bold">Bildirimler</h6>
+        @if (bildirimSayisi > 0)
+        {
+            <a asp-controller="Bildirim" asp-action="MarkAllAsRead" class="small text-decoration-none">Tümünü Okundu İşaretle</a>
+        }
+    </div>
+    <ul class="list-unstyled p-0 m-0">
+        @if (bildirimSayisi > 0)
+        {
+            foreach (var bildirim in Model)
+            {
+                <li class="border-bottom">
+                    <a asp-controller="Bildirim" asp-action="MarkAsRead" asp-route-id="@bildirim.BildirimId" class="dropdown-item d-flex flex-column px-4 py-3 text-wrap">
+                        <span class="fw-semibold text-dark mb-1">@bildirim.BildirimTuru</span>
+                        <span class="small text-muted mb-1">@bildirim.Mesaj</span>
+                        <small class="text-primary">@(bildirim.OlusturulmaTarihi?.ToString("dd.MM.yyyy HH:mm") ?? "")</small>
+                    </a>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="px-4 py-4 text-center text-muted small">
+                Okunmamış yeni bildiriminiz yok.
+            </li>
+        }
+    </ul>
+</div>

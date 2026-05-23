@@ -7,6 +7,17 @@
 @await Html.PartialAsync("_PageHeader")
 
 <div class="container-fluid pb-4">
+    <div class="card border-0 shadow-sm col-md-8 col-lg-6 mx-auto mb-3">
+        <div class="card-body py-3 d-flex justify-content-between align-items-center bg-light rounded">
+            <span class="text-muted fw-semibold">Departman Maaş Bütçesi:</span>
+            <div class="text-end">
+                <span class="d-block">Toplam: <strong>@((ViewBag.ToplamMaasButcesi ?? 0).ToString("N2")) ₺</strong></span>
+                <span class="d-block @((ViewBag.KalanMaas ?? 0) < 0 ? "text-danger" : "text-success")">
+                    Kalan: <strong>@((ViewBag.KalanMaas ?? 0).ToString("N2")) ₺</strong>
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="card border-0 shadow-sm col-md-8 col-lg-6 mx-auto">
         <div class="card-body p-4">
             <form asp-action="Edit" method="post" class="needs-validation" novalidate>

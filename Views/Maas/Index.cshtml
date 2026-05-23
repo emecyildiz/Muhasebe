@@ -7,6 +7,36 @@
 @await Html.PartialAsync("_PageHeader")
 
 <div class="container-fluid pb-4">
+    @if (User.IsInRole("Mudur") || User.IsInRole("Admin"))
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Toplam Maaş Bütçesi</h6>
+                        <h3 class="mb-0">@((ViewBag.ToplamMaasButcesi ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-info text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Dağıtılan Maaşlar</h6>
+                        <h3 class="mb-0">@((ViewBag.KullanilanMaas ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm @((ViewBag.KalanMaas ?? 0) < 0 ? "bg-danger" : "bg-success") text-white">
+                    <div class="card-body">
+                        <h6 class="card-title text-white-50">Kalan Maaş Limiti</h6>
+                        <h3 class="mb-0">@((ViewBag.KalanMaas ?? 0).ToString("N2")) ₺</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
     {
         <div class="d-flex mb-3">
@@ -39,8 +69,15 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Mudur"))
                         {
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> Düzenle</a>
-                                <a asp-action="Delete" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i> Sil</a>
+                                @if (item.KullaniciId == ViewBag.AktifKullaniciId && User.IsInRole("Mudur"))
+                                {
+                                    <span class="text-muted fst-italic small">Yetki dışı (Kendi Maaşınız)</span>
+                                }
+                                else
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> Düzenle</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MaasId" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i> Sil</a>
+                                }
                             </td>
                         }
                     </tr>

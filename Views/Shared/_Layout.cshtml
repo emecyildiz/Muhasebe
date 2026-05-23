@@ -32,33 +32,18 @@
     var canSeeApprovals = isAdmin || isManager;
     var canSeeDepartment = isAdmin || isManager;
 }
-  <div id="overlay" class="overlay"></div>
+  <div id="overlay" class="overlay" onclick="closeMobileSidebar(event)"></div>
   <nav id="topbar" class="navbar bg-white border-bottom fixed-top topbar px-3">
-    <button id="toggleBtn" type="button" class="d-none d-lg-inline-flex btn btn-light btn-icon btn-sm ">
+    <button id="toggleBtn" type="button" class="d-none d-lg-inline-flex btn btn-light btn-icon btn-sm" onclick="toggleSidebar(event)">
       <i class="ti ti-layout-sidebar-left-expand"></i>
     </button>
-    <button id="mobileBtn" type="button" class="btn btn-light btn-icon btn-sm d-lg-none me-2">
+    <button id="mobileBtn" type="button" class="btn btn-light btn-icon btn-sm d-lg-none me-2" onclick="toggleMobileSidebar(event)">
       <i class="ti ti-layout-sidebar-left-expand"></i>
     </button>
     <div>
       <ul class="list-unstyled d-flex align-items-center mb-0 gap-1">
-        <li>
-          <a class="position-relative btn-icon btn-sm btn-light btn rounded-circle" data-bs-toggle="dropdown"
-            aria-expanded="false" href="#" role="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-              class="icon icon-tabler icons-tabler-outline icon-tabler-bell">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-              <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
-            </svg>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mt-2 ms-n2">2<span class="visually-hidden">bildirim</span></span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-0">
-            <ul class="list-unstyled p-0 m-0">
-              <li class="px-4 py-3 text-center text-muted small">Henüz gerçek bildirim yok — backend ile bağlanır.</li>
-            </ul>
-          </div>
+        <li class="dropdown">
+          @await Component.InvokeAsync("Bildirimler")
         </li>
         <li class="ms-3 dropdown">
           <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,36 +78,31 @@
   
   <!-- JavaScript sidebar toggle entegrasyonu -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toggleBtn = document.getElementById("toggleBtn");
-        const mobileBtn = document.getElementById("mobileBtn");
-        const sidebar = document.getElementById("sidebar");
-        const topbar = document.getElementById("topbar");
-        const content = document.getElementById("content");
-        const overlay = document.getElementById("overlay");
+    function toggleSidebar(e) {
+        if(e) e.preventDefault();
+        var sidebar = document.getElementById('sidebar');
+        var topbar = document.getElementById('topbar');
+        var content = document.getElementById('content');
+        if(sidebar) sidebar.classList.toggle('collapsed');
+        if(topbar) topbar.classList.toggle('full');
+        if(content) content.classList.toggle('full');
+    }
 
-        if (toggleBtn && sidebar && topbar && content) {
-            toggleBtn.addEventListener("click", function() {
-                sidebar.classList.toggle("collapsed");
-                topbar.classList.toggle("full");
-                content.classList.toggle("full");
-            });
-        }
+    function toggleMobileSidebar(e) {
+        if(e) e.preventDefault();
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('overlay');
+        if(sidebar) sidebar.classList.toggle('mobile-show');
+        if(overlay) overlay.classList.toggle('show');
+    }
 
-        if (mobileBtn && sidebar && overlay) {
-            mobileBtn.addEventListener("click", function() {
-                sidebar.classList.toggle("mobile-show");
-                overlay.classList.toggle("show");
-            });
-        }
-
-        if (overlay && sidebar) {
-            overlay.addEventListener("click", function() {
-                sidebar.classList.remove("mobile-show");
-                overlay.classList.remove("show");
-            });
-        }
-    });
+    function closeMobileSidebar(e) {
+        if(e) e.preventDefault();
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('overlay');
+        if(sidebar) sidebar.classList.remove('mobile-show');
+        if(overlay) overlay.classList.remove('show');
+    }
   </script>
 
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

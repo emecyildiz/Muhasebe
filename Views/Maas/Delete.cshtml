@@ -1,0 +1,50 @@
+@model Muhasebe.Models.Entities.Maas
+
+@{
+    ViewData["Title"] = "Maaş Sil";
+    ViewData["PageTitle"] = "Maaş Kaydını Sil";
+    ViewData["PageSubtitle"] = "Bu maaş kaydını silmek istediğinizden emin misiniz?";
+    ViewData["ShowBack"] = true;
+}
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container-fluid pb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm border-danger border-top border-3">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-danger mb-4"><i class="ti ti-alert-triangle me-2"></i>Silme Onayı</h5>
+                    
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4 text-secondary">Çalışan Adı Soyadı</dt>
+                        <dd class="col-sm-8 fw-semibold">@(Model.Kullanici?.Ad) @(Model.Kullanici?.Soyad)</dd>
+
+                        <dt class="col-sm-4 text-secondary">Aylık Tutar</dt>
+                        <dd class="col-sm-8 text-primary fw-bold">@Model.AylikTutar.ToString("N2") ₺</dd>
+
+                        <dt class="col-sm-4 text-secondary">Başlangıç Tarihi</dt>
+                        <dd class="col-sm-8">@Model.BaslangicTarihi.ToString("dd.MM.yyyy")</dd>
+
+                        <dt class="col-sm-4 text-secondary">Bitiş Tarihi</dt>
+                        <dd class="col-sm-8">@(Model.BitisTarihi != null ? Model.BitisTarihi.Value.ToString("dd.MM.yyyy") : "Devam Ediyor")</dd>
+                    </dl>
+
+                    <div class="alert alert-warning bg-warning-subtle text-warning-emphasis border-0">
+                        <i class="ti ti-info-circle me-2"></i>
+                        Bu işlemi onaylarsanız, bu çalışana ait <strong>@Model.AylikTutar.ToString("N2") ₺</strong> tutarındaki maaş kaydı kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+                    </div>
+
+                    <form asp-action="Delete" method="post" class="mt-4">
+                        <input type="hidden" asp-for="MaasId" />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-light">İptal Et</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="ti ti-trash me-1"></i> Kalıcı Olarak Sil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

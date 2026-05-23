@@ -60,6 +60,28 @@ namespace Muhasebe.Services
             };
             await _context.MasrafTalebis.AddAsync(masrafTalebi);
             await _context.SaveChangesAsync();
+
+            // İlgili departmanın Müdürlerine bildirim gönder
+            var departmanMudurleri = await _context.Kullanicis
+                .Include(k => k.Rol)
+                .Where(k => k.DepartmanId == departmanId && (k.Rol.RolAdi == "Mudur" || k.Rol.RolAdi == "Admin"))
+                .ToListAsync();
+
+            var bildirimler = departmanMudurleri.Select(mudur => new Bildirim
+            {
+                AliciId = mudur.KullaniciId,
+                TalepId = masrafTalebi.TalepId,
+                BildirimTuru = "Yeni Talep",
+                Mesaj = $"{model.Tutar:C2} tutarında yeni bir masraf talebi oluşturuldu.",
+                Okundu = false,
+                OlusturulmaTarihi = DateTime.Now
+            }).ToList();
+
+            if (bildirimler.Any())
+            {
+                await _context.Bildirims.AddRangeAsync(bildirimler);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DurumGuncelleAsync(int talepId, int durumId, int onaylayanId)
